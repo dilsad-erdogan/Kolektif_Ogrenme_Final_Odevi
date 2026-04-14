@@ -272,171 +272,180 @@ def main():
     print("\n[-] Veri Setinden İlk 5 Satır:\n")
     print(df_edges.head())
 
+    # --- YENİ EKLENEN ROTA İNŞA FONKSİYONU ---
+    def rota_insa_et_ve_ciz(model_name, model, df_edges, X_all, n_durak, isimler, matris_df, df_sample):
+        # Tüm veri üzerinden modelin olasılık tahminlerini al (sınıf "1" dendiği durumların olasılığı)
+        probs = model.predict_proba(X_all)[:, 1]
+        
+        # (N x N) boyutunda olasılık matrisi oluşturalım
+        prob_matrix = [[0.0 for _ in range(n_durak)] for _ in range(n_durak)]
+        idx = 0
+        for i in range(n_durak):
+            for j in range(n_durak):
+                if i != j:
+                    prob_matrix[i][j] = probs[idx]
+                    idx += 1
+                    
+        # Hızlı erişim için numpy matrisi
+        m_matrix = matris_df.values
+        
+        best_overall_route = []
+        best_overall_distance = float('inf')
+        best_overall_start = -1
+        
+        # Elimizdeki 20 durağın her birini "Acaba buradan başlasak daha kısa sürer mi?" diye deniyoruz
+        for start_node in range(n_durak):
+            unvisited = set(range(n_durak))
+            unvisited.remove(start_node)
+            current_node = start_node
+            
+            route = [start_node]
+            total_dist = 0.0
+            
+            # Açık Uçlu (Open) kapalı olmayan TSP: Tüm noktalara uğrayana kadar
+            while unvisited:
+                best_next = -1
+                best_p = -1.0
+                best_d = float('inf')
+                
+                # Ziyaret edilmemiş duraklar arasında en iyiyi bul
+                for candidate in unvisited:
+                    p = prob_matrix[current_node][candidate]
+                    d = m_matrix[current_node][candidate]
+                    
+                    # Modelin tahmini (olasılık) yüksekse onu seç. Eşitlikte/kararsızlıkta kısa mesafeye güven!
+                    if p > best_p or (p == best_p and d < best_d):
+                        best_p = p
+                        best_d = d
+                        best_next = candidate
+                        
+                route.append(best_next)
+                total_dist += best_d
+                unvisited.remove(best_next)
+                current_node = best_next
+                
+            # Eğer bu iterasyon modeli için şimdiye kadarki "En Kısa Rota" ise kaydet.
+            if total_dist < best_overall_distance:
+                best_overall_distance = total_dist
+                best_overall_route = route
+                best_overall_start = start_node
+                
+        print(f"\n[-] {model_name} Tarafından En Uygun Bulunan Başlangıç Noktası (Orijin): {isimler[best_overall_start]}")
+        print(f"[-] Optimize Edilen En Kısa Açık Uçlu Rota Toplam Mesafesi: {best_overall_distance:.2f} km")
+        print("\n[+] Rota İstikamet Adımları:")
+        for step, n_idx in enumerate(best_overall_route):
+            print(f"    {step+1}. {isimler[n_idx]}")
+            
+        # Görselleştirme
+        plt.figure(figsize=(12, 8))
+        plt.scatter(df_sample['Longitude'], df_sample['Latitude'], c='blue', marker='o', s=100, label='Duraklar', zorder=5)
+        
+        for _, row in df_sample.iterrows():
+            kisa_adi = str(row['Durak_Adi'])[:20]
+            plt.annotate(kisa_adi, (row['Longitude'], row['Latitude']), 
+                         xytext=(5, 5), textcoords='offset points', fontsize=8, zorder=6)
+                         
+        c_color = 'green' if 'Random Forest' in model_name else ('orange' if 'XGBoost' in model_name else 'purple')
+        
+        # Tahmin edilen en iyi rotayı sırayla ardışık şekilde çiz
+        for i_idx in range(len(best_overall_route) - 1):
+            n1 = best_overall_route[i_idx]
+            n2 = best_overall_route[i_idx+1]
+            n1_lon, n1_lat = duraklar[n1]['Longitude'], duraklar[n1]['Latitude']
+            n2_lon, n2_lat = duraklar[n2]['Longitude'], duraklar[n2]['Latitude']
+            
+            # Çizgi çek
+            plt.plot([n1_lon, n2_lon], [n1_lat, n2_lat], c=c_color, linestyle='-', linewidth=2, alpha=0.7, zorder=4)
+            
+            # Hat boyunca yönü gösteren bir ok işareti ekle
+            dx = (n2_lon - n1_lon) * 0.5
+            dy = (n2_lat - n1_lat) * 0.5
+            plt.arrow(n1_lon, n1_lat, dx, dy, shape='full', lw=0, length_includes_head=True, head_width=0.003, color=c_color, zorder=5)
+
+        # Başlangıç(Start) ve Bitiş(End) Noktasını Simgelerle Göster
+        s_idx = best_overall_route[0]
+        e_idx = best_overall_route[-1]
+        plt.scatter(duraklar[s_idx]['Longitude'], duraklar[s_idx]['Latitude'], c='gold', marker='*', s=350, label='BAŞLANGIÇ', zorder=7)
+        plt.scatter(duraklar[e_idx]['Longitude'], duraklar[e_idx]['Latitude'], c='black', marker='X', s=150, label='BİTİŞ', zorder=7)
+
+        plt.title(f'{model_name} Heuristic Rehberliği ile Kesintisiz En Kısa Rota', fontsize=14)
+        plt.xlabel('Boylam (Longitude)', fontsize=12)
+        plt.ylabel('Enlem (Latitude)', fontsize=12)
+        plt.grid(True, linestyle=':', alpha=0.6, zorder=0)
+        plt.legend()
+        
+        # Model ismine göre grafiği kaydet
+        if 'Random Forest' in model_name: g_name = 'rf_continuous_route.png'
+        elif 'XGBoost' in model_name: g_name = 'xgb_continuous_route.png'
+        else: g_name = 'stack_continuous_route.png'
+        
+        plt.savefig(g_name, dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"\n[-] Kesintisiz rota haritası '{g_name}' adıyla başarıyla kaydedildi.")
+
+
     time.sleep(5)
     print("\n" + "="*50)
-    print(" 7. AŞAMA: RANDOM FOREST İLE MODEL EĞİTİMİ (BAGGING) ")
+    print(" 7. AŞAMA: RANDOM FOREST (BAGGING) İLE KESİNTİSİZ ROTA ÇİZİMİ ")
     print("="*50)
 
     try:
         from sklearn.ensemble import RandomForestClassifier
-        from sklearn.model_selection import train_test_split
-        from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
         
-        # Özellikler (Features) ve Hedef (Target)
-        X = df_edges[['Origin_Lon', 'Origin_Lat', 'Dest_Lon', 'Dest_Lat', 'Distance_km']]
-        y = df_edges['Is_On_Optimal_Route']
+        # Makine öğrenmesini "değerlendirici" (Heuristic Critic) olarak tüm veri setiyle eğitiyoruz. 
+        # Train/Test ayırmıyoruz, amacımız bu 20 duraklık haritada en iyi kuralı(path'i) buldurtmak.
+        X_tamami = df_edges[['Origin_Lon', 'Origin_Lat', 'Dest_Lon', 'Dest_Lat', 'Distance_km']]
+        y_hedef = df_edges['Is_On_Optimal_Route']
         
-        # Train-Test Split (%80 Eğitim, %20 Test)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        
-        # Model Tanımlama ve Eğitme
-        # Dengesiz veri setlerinde (az sayıda 1, çok sayıda 0) class_weight='balanced' kullanmak performansı artırır.
         rf_model = RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced')
-        rf_model.fit(X_train, y_train)
+        rf_model.fit(X_tamami, y_hedef)
         
-        # Tahminler
-        y_pred = rf_model.predict(X_test)
+        rota_insa_et_ve_ciz('Random Forest', rf_model, df_edges, X_tamami, n, durak_isimleri, mesafe_matrisi, df_sampled)
         
-        # Sonuç Tabloları
-        print("\n[-] Random Forest Sınıflandırma Raporu (Classification Report):\n")
-        print(classification_report(y_test, y_pred, zero_division=0))
-        
-        print("\n[-] Karmaşıklık Matrisi (Confusion Matrix):\n")
-        print(confusion_matrix(y_test, y_pred))
-        
-        # Özellik Önem Dereceleri (Feature Importances)
-        feature_importances = pd.DataFrame(rf_model.feature_importances_, index=X.columns, columns=['Importance']).sort_values('Importance', ascending=False)
-        print("\n[-] Özellik Önem Dereceleri:\n")
-        print(feature_importances)
-        
-        # Tahmin Edilen Rota'yı Görselleştirelim
-        # Algoritmanın tüm veri seti üzerinde (test ve train birlikte) neyi 1 olarak nitelendirdiğini görelim
-        df_edges['RF_Prediction'] = rf_model.predict(X)
-        
-        # Tahmin edilen rota kenarları (Tahmini 1 olanlar)
-        predicted_edges = df_edges[df_edges['RF_Prediction'] == 1]
-        
-        plt.figure(figsize=(12, 8))
-        # Durakları grafikte nokta olarak işaretle
-        plt.scatter(df_sampled['Longitude'], df_sampled['Latitude'], c='blue', marker='o', s=100, label='Duraklar', zorder=5)
-        
-        # İsim etiketleri
-        for idx, row in df_sampled.iterrows():
-            durak_kisa_adi = str(row['Durak_Adi'])[:20]
-            plt.annotate(durak_kisa_adi, (row['Longitude'], row['Latitude']), 
-                         xytext=(5, 5), textcoords='offset points', fontsize=8, zorder=6)
-                         
-        # Tahmin Edilen Kenarları (Rotayı) Bağla
-        for _, edge in predicted_edges.iterrows():
-            plt.plot([edge['Origin_Lon'], edge['Dest_Lon']], 
-                     [edge['Origin_Lat'], edge['Dest_Lat']], 
-                     c='green', linestyle='-', linewidth=2, alpha=0.7, zorder=4)
-                     
-        # Gerçek (En Yakın Komşu) rotasını da kıyaslamak için hafif şeffaf kırmızı çizgilerle ekleyelim (Opsiyonel)
-        real_edges = df_edges[df_edges['Is_On_Optimal_Route'] == 1]
-        for _, edge in real_edges.iterrows():
-            plt.plot([edge['Origin_Lon'], edge['Dest_Lon']], 
-                     [edge['Origin_Lat'], edge['Dest_Lat']], 
-                     c='red', linestyle=':', linewidth=1, alpha=0.5, zorder=3)
-                     
-        # Grafiğin görsel özellikleri için legend'a manuel elemanlar ekleyelim
-        plt.plot([], [], c='green', linestyle='-', linewidth=2, label='RF Tahmini (Prediction=1)')
-        plt.plot([], [], c='red', linestyle=':', linewidth=1, label='Gerçek (Is_Optimal=1)')
-        
-        plt.title('Random Forest Sınıflandırıcısı ile Tahmin Edilen Kenarlar (Rota Öğrenimi)', fontsize=14)
-        plt.xlabel('Boylam (Longitude)', fontsize=12)
-        plt.ylabel('Enlem (Latitude)', fontsize=12)
-        plt.grid(True, linestyle=':', alpha=0.6, zorder=0)
-        plt.legend()
-        
-        # Görseli çıktı olarak kaydet
-        rf_gorsel_yolu = 'rf_predicted_route.png'
-        plt.savefig(rf_gorsel_yolu, dpi=300, bbox_inches='tight')
-        plt.close() # Belleği temizle
-        print(f"\n[-] Random Forest tarafından tahmin edilen rotanın görsel haritası '{rf_gorsel_yolu}' adıyla başarıyla kaydedildi.")
-        
-    except ImportError:
-        print("[-] Hata: 'scikit-learn' kütüphanesi eksik. Lütfen 'pip install scikit-learn' komutu ile yükleyin ve tekrar deneyin.")
+    except Exception as e:
+        print(f"[-] Random Forest aşamasında bir hata oluştu: {e}")
 
     time.sleep(5)
     print("\n" + "="*50)
-    print(" 8. AŞAMA: XGBOOST İLE MODEL EĞİTİMİ (BOOSTING) ")
+    print(" 8. AŞAMA: XGBOOST (BOOSTING) İLE KESİNTİSİZ ROTA ÇİZİMİ ")
     print("="*50)
 
     try:
         from xgboost import XGBClassifier
-        from sklearn.model_selection import train_test_split
-        from sklearn.metrics import classification_report, confusion_matrix
         
-        # Önceden hazırlanan veriyi kullanalım
-        X = df_edges[['Origin_Lon', 'Origin_Lat', 'Dest_Lon', 'Dest_Lat', 'Distance_km']]
-        y = df_edges['Is_On_Optimal_Route']
-        
-        # Train-Test Split (%80 Eğitim, %20 Test)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        
-        # Model Tanımlama ve Eğitme
-        # Dengesizlik (Imbalance) ile mücadele etmek için scale_pos_weight kullanıyoruz
-        # scale_pos_weight = (Sınıf 0 Sayısı) / (Sınıf 1 Sayısı)
-        ratio = float(y_train.value_counts()[0]) / y_train.value_counts()[1]
-        
+        ratio = float(y_hedef.value_counts()[0]) / y_hedef.value_counts()[1]
         xgb_model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', scale_pos_weight=ratio, random_state=42)
-        xgb_model.fit(X_train, y_train)
+        xgb_model.fit(X_tamami, y_hedef)
         
-        # Tahminler
-        y_pred_xgb = xgb_model.predict(X_test)
+        rota_insa_et_ve_ciz('XGBoost', xgb_model, df_edges, X_tamami, n, durak_isimleri, mesafe_matrisi, df_sampled)
         
-        # Sonuç Tabloları
-        print("\n[-] XGBoost Sınıflandırma Raporu (Classification Report):\n")
-        print(classification_report(y_test, y_pred_xgb, zero_division=0))
+    except Exception as e:
+        print(f"[-] XGBoost aşamasında bir hata oluştu: {e}")
+
+    time.sleep(5)
+    print("\n" + "="*50)
+    print(" 9. AŞAMA: STACKING META-MODEL İLE KESİNTİSİZ ROTA ÇİZİMİ ")
+    print("="*50)
+
+    try:
+        from sklearn.ensemble import StackingClassifier
+        from sklearn.linear_model import LogisticRegression
+        import warnings
+        warnings.filterwarnings("ignore")
         
-        print("\n[-] Karmaşıklık Matrisi (Confusion Matrix):\n")
-        print(confusion_matrix(y_test, y_pred_xgb))
+        base_models = [
+            ('rf', RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced')),
+            ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss', scale_pos_weight=ratio, random_state=42))
+        ]
         
-        # Özellik Önem Dereceleri (Feature Importances)
-        xgb_feature_importances = pd.DataFrame(xgb_model.feature_importances_, index=X.columns, columns=['Importance']).sort_values('Importance', ascending=False)
-        print("\n[-] Özellik Önem Dereceleri:\n")
-        print(xgb_feature_importances)
+        meta_model = LogisticRegression(class_weight='balanced', random_state=42)
+        stack_model = StackingClassifier(estimators=base_models, final_estimator=meta_model, cv=5)
+        stack_model.fit(X_tamami, y_hedef)
         
-        # Tahmin Edilen Rota'yı Görselleştirelim
-        df_edges['XGB_Prediction'] = xgb_model.predict(X)
-        predicted_edges_xgb = df_edges[df_edges['XGB_Prediction'] == 1]
+        rota_insa_et_ve_ciz('Stacking Meta-Model', stack_model, df_edges, X_tamami, n, durak_isimleri, mesafe_matrisi, df_sampled)
         
-        plt.figure(figsize=(12, 8))
-        plt.scatter(df_sampled['Longitude'], df_sampled['Latitude'], c='blue', marker='o', s=100, label='Duraklar', zorder=5)
-        
-        for idx, row in df_sampled.iterrows():
-            durak_kisa_adi = str(row['Durak_Adi'])[:20]
-            plt.annotate(durak_kisa_adi, (row['Longitude'], row['Latitude']), 
-                         xytext=(5, 5), textcoords='offset points', fontsize=8, zorder=6)
-                         
-        for _, edge in predicted_edges_xgb.iterrows():
-            plt.plot([edge['Origin_Lon'], edge['Dest_Lon']], 
-                     [edge['Origin_Lat'], edge['Dest_Lat']], 
-                     c='orange', linestyle='-', linewidth=2, alpha=0.7, zorder=4)
-                     
-        real_edges = df_edges[df_edges['Is_On_Optimal_Route'] == 1]
-        for _, edge in real_edges.iterrows():
-            plt.plot([edge['Origin_Lon'], edge['Dest_Lon']], 
-                     [edge['Origin_Lat'], edge['Dest_Lat']], 
-                     c='red', linestyle=':', linewidth=1, alpha=0.5, zorder=3)
-                     
-        plt.plot([], [], c='orange', linestyle='-', linewidth=2, label='XGBoost Tahmini (Prediction=1)')
-        plt.plot([], [], c='red', linestyle=':', linewidth=1, label='Gerçek Rota (Is_Optimal=1)')
-        
-        plt.title('XGBoost Sınıflandırıcısı ile Tahmin Edilen Kenarlar', fontsize=14)
-        plt.xlabel('Boylam (Longitude)', fontsize=12)
-        plt.ylabel('Enlem (Latitude)', fontsize=12)
-        plt.grid(True, linestyle=':', alpha=0.6, zorder=0)
-        plt.legend()
-        
-        xgb_gorsel_yolu = 'xgb_predicted_route.png'
-        plt.savefig(xgb_gorsel_yolu, dpi=300, bbox_inches='tight')
-        plt.close()
-        print(f"\n[-] XGBoost tarafından tahmin edilen rotanın görsel haritası '{xgb_gorsel_yolu}' adıyla başarıyla kaydedildi.")
-        
-    except ImportError:
-        print("[-] Hata: 'xgboost' kütüphanesi eksik. Lütfen 'pip install xgboost' komutu ile yükleyin ve tekrar deneyin.")
+    except Exception as e:
+        print(f"[-] Stacking aşamasında bir hata oluştu: {e}")
 
 
 if __name__ == "__main__":
