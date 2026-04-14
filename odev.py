@@ -417,13 +417,25 @@ def main():
         plt.close()
         print(f"\n[-] Kesintisiz rota haritası '{g_name}' adıyla başarıyla kaydedildi.")
         
+        # Animasyonlu web sunumu için koordinatları listeleyelim
+        route_coords = []
+        for n_idx in best_overall_route:
+            route_coords.append({
+                'name': duraklar[n_idx]['Durak_Adi'],
+                'lat': float(duraklar[n_idx]['Latitude']),
+                'lng': float(duraklar[n_idx]['Longitude'])
+            })
+            
         return {
             'Model': model_name,
             'Accuracy': acc * 100,
             'Precision': prec * 100,
             'Recall': rec * 100,
             'F1 Skoru': f1 * 100,
-            'ROC-AUC': auc * 100
+            'ROC-AUC': auc * 100,
+            'Confidence': avg_confidence * 100,
+            'Distance': best_overall_distance,
+            'RouteCoords': route_coords
         }
 
 
@@ -529,6 +541,39 @@ def main():
         plt.close()
         
         print(f"[-] Modellerin test seti üzerindeki performans metriklerini kıyaslayan grafik '{karsilastirma_gorsel_yolu}' adıyla oluşturulup kaydedildi.")
+        
+        # WEB SUNUMU İÇİN DATAYI DIŞARI ÇIKARMA
+        try:
+            import os
+            
+            web_folder = 'web_sunum'
+            if not os.path.exists(web_folder):
+                os.makedirs(web_folder)
+                
+            web_data = {
+                'allStops': duraklar, 
+                'models': tum_metrikler
+            }
+            
+            class NumpyEncoder(json.JSONEncoder):
+                def default(self, obj):
+                    import numpy as np
+                    if isinstance(obj, np.floating):
+                        return float(obj)
+                    if isinstance(obj, np.integer):
+                        return int(obj)
+                    if isinstance(obj, np.ndarray):
+                        return obj.tolist()
+                    return super(NumpyEncoder, self).default(obj)
+                    
+            js_content = "const presentationData = " + json.dumps(web_data, ensure_ascii=False, indent=2, cls=NumpyEncoder) + ";"
+            with open(os.path.join(web_folder, 'data.js'), 'w', encoding='utf-8') as f:
+                f.write(js_content)
+                
+            print("[-] Animasyonlu Web Sunumu için 'web_sunum/data.js' dosyası başarıyla üretildi.")
+        except Exception as e:
+            print(f"[-] Web verisi oluşturulurken hata: {e}")
+            
     else:
         print("[-] Metrik verisi bulunamadığı için grafik çizilemedi.")
 
