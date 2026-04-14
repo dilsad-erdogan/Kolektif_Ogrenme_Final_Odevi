@@ -129,7 +129,7 @@ def main():
 
     time.sleep(2)
     print("\n" + "="*50)
-    print(" 4. AŞAMA: MESAFE HESAPLAMA (HAVERSINE MATRİSİ) ")
+    print(" 4. AŞAMA: MESAFE HESAPLAMA (OSRM YOL MESAFLERİ) ")
     print("="*50)
     
     # nxn Mesafe matrisi oluşturalım
@@ -139,20 +139,47 @@ def main():
     
     mesafe_matrisi = pd.DataFrame(index=durak_isimleri, columns=durak_isimleri)
                                   
-    for i in range(n):
-        for j in range(n):
-            if i == j:
-                mesafe_matrisi.iloc[i, j] = 0.0
+    # OSRM Table API'si için koordinatları birleştir
+    coords_str = ";".join([f"{d['Longitude']},{d['Latitude']}" for d in duraklar])
+    osrm_url = f"http://router.project-osrm.org/table/v1/driving/{coords_str}?annotations=distance"
+    
+    import urllib.request
+    
+    osrm_basarili = False
+    try:
+        print("[-] OSRM API üzerinden gerçek yol mesafeleri (Distance Matrix) çekiliyor...")
+        req = urllib.request.Request(osrm_url, headers={'User-Agent': 'KolektifOgrenmeProjesi/1.0'})
+        with urllib.request.urlopen(req, timeout=15) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            
+            if data.get('code') == 'Ok':
+                distances = data.get('distances', [])
+                for i in range(n):
+                    for j in range(n):
+                        # OSRM metre cinsinden döner, km'ye dönüştürüyoruz
+                        mesafe_matrisi.iloc[i, j] = distances[i][j] / 1000.0 if distances[i][j] is not None else 0.0
+                osrm_basarili = True
+                print("[-] Gerçek sokak mesafeleri OSRM ile başarıyla hesaplandı.")
             else:
-                d1 = duraklar[i]
-                d2 = duraklar[j]
-                dist = haversine(d1['Longitude'], d1['Latitude'], d2['Longitude'], d2['Latitude'])
-                mesafe_matrisi.iloc[i, j] = dist
+                print(f"[-] OSRM API hatası döndü: {data.get('code')}")
+    except Exception as e:
+        print(f"[-] OSRM API çağrısında hata oluştu: {e}")
+        
+    if not osrm_basarili:
+        print("[-] DİKKAT: OSRM başarısız oldu. Yedek sistem (Haversine Kuş Uçuşu) devreye alınıyor...")
+        for i in range(n):
+            for j in range(n):
+                if i == j:
+                    mesafe_matrisi.iloc[i, j] = 0.0
+                else:
+                    d1 = duraklar[i]
+                    d2 = duraklar[j]
+                    dist = haversine(d1['Longitude'], d1['Latitude'], d2['Longitude'], d2['Latitude'])
+                    mesafe_matrisi.iloc[i, j] = dist
+        print("[-] Seçilen duraklar arasındaki mesafeler Haversine formülü ile hesaplandı.")
                 
     # Görüntüleme için float yapalım
     mesafe_matrisi = mesafe_matrisi.astype(float)
-                
-    print("[-] Seçilen duraklar arasındaki mesafeler Haversine formülü ile başarıyla hesaplandı.")
     
     # Matrisi CSV olarak kaydet
     matris_kayit_yolu = 'mesafe_matrisi.csv'

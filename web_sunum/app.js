@@ -29,12 +29,12 @@ let animationFrameId = null;
 function initializeBaseStops() {
     presentationData.allStops.forEach(stop => {
         const marker = L.circleMarker([stop.Latitude, stop.Longitude], {
-            radius: 4,
-            fillColor: "#475569",
-            color: "#1e293b",
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.6
+            radius: 6,
+            fillColor: "#64748b",
+            color: "#0f172a",
+            weight: 2,
+            opacity: 0.8,
+            fillOpacity: 0.8
         }).addTo(map);
         marker.bindTooltip(stop.Durak_Adi, { direction: 'top', className: 'custom-tooltip' });
         baseMarkers.push(marker);
@@ -50,21 +50,34 @@ function clearRoutes() {
     routeMarkers = [];
 }
 
-function animateRoute(coordsArray) {
+function animateRoute(coordsArray, routeStops = []) {
     if(!coordsArray || coordsArray.length === 0) return;
 
     const latlngs = coordsArray.map(c => [c.lat, c.lng]);
     const start = coordsArray[0];
     const end = coordsArray[coordsArray.length - 1];
 
-    // Başlangıç ve Bitiş Özel İşaretleri
+    // Ara Durakları Belirginleştirme (Route Stops)
+    if (routeStops && routeStops.length > 0) {
+        routeStops.forEach((stop, index) => {
+            // Başlangıç ve bitişi atla, o noktalara özel büyük işaret koyulacak
+            if (index === 0 || index === routeStops.length - 1) return;
+            
+            const marker = L.circleMarker([stop.lat, stop.lng], {
+                radius: 8, fillColor: "#eab308", color: "#000", weight: 2, fillOpacity: 0.95
+            }).addTo(map).bindTooltip(`${index + 1}. Durak: ${stop.name}`, {permanent: false, direction: 'top'});
+            routeMarkers.push(marker);
+        });
+    }
+
+    // Başlangıç ve Bitiş Özel ve Daha Büyük İşaretleri
     const startMarker = L.circleMarker([start.lat, start.lng], {
-        radius: 8, fillColor: "#22c55e", color: "#fff", weight: 2, fillOpacity: 1
-    }).addTo(map).bindTooltip("Başlangıç Noktası: " + start.name, {permanent: false, direction: 'right'});
+        radius: 12, fillColor: "#22c55e", color: "#fff", weight: 3, fillOpacity: 1
+    }).addTo(map).bindTooltip("BAŞLANGIÇ: " + start.name, {permanent: false, direction: 'right'});
 
     const endMarker = L.circleMarker([end.lat, end.lng], {
-        radius: 8, fillColor: "#ef4444", color: "#fff", weight: 2, fillOpacity: 1
-    }).addTo(map).bindTooltip("Bitiş Noktası: " + end.name, {permanent: false, direction: 'right'});
+        radius: 12, fillColor: "#ef4444", color: "#fff", weight: 3, fillOpacity: 1
+    }).addTo(map).bindTooltip("BİTİŞ: " + end.name, {permanent: false, direction: 'right'});
 
     routeMarkers.push(startMarker, endMarker);
 
@@ -118,15 +131,25 @@ function animateRoute(coordsArray) {
                 return;
             }
 
-            // Çizim yumuşaklığı (progress)
-            // 0.08 değeri her adımda %8 ilerleme demek. Lineer bir akış hissi verir.
-            progress += 0.08; 
+            // OSRM aralarda binlerce detaylı nokta döndüğünden çizim hızını dinamik ayarlıyoruz
+            // İzlemesi daha keyifli olması adına yaklaşık 3-4 saniye civarında bitmesi için hız çarpanı
+            let speed = Math.max(0.15, latlngs.length / 180);
+            progress += speed;  
             
             if (progress >= 1) {
-                activePoints.push(endPoint);
+                let stepsToAdvance = Math.floor(progress);
+                // Artan suratları bir sonraki döngüye sakla
+                progress -= stepsToAdvance;
+                
+                // Kaç nokta geçilmesi gerekiyorsa listeye ekle
+                for(let i=0; i<stepsToAdvance; i++) {
+                    if (currentIndex < latlngs.length) {
+                        activePoints.push(latlngs[currentIndex]);
+                        currentIndex++;
+                    }
+                }
+                
                 sequentialLine.setLatLngs(activePoints);
-                currentIndex++;
-                progress = 0;
                 
                 if (currentIndex < latlngs.length) {
                     startPoint = latlngs[currentIndex - 1];
@@ -200,10 +223,32 @@ function selectModel(index) {
     clearRoutes();
     updateUI(modelData);
 
-    // Bounding delay
-    setTimeout(() => {
-        animateRoute(modelData.RouteCoords);
-    }, 400);
+    // OSRM Gerçek Yol Entegrasyonu (Real Street Routing)
+    // OSRM router formatı: lon,lat;lon,lat;...
+    const coordsStr = modelData.RouteCoords.map(c => `${c.lng},${c.lat}`).join(';');
+    const url = `http://router.project-osrm.org/route/v1/driving/${coordsStr}?geometries=geojson&overview=full`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if(data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                // GeoJSON formatı lng,lat döner. Bunu bizim [lat, lng] formatına çevir
+                const osrmCoords = data.routes[0].geometry.coordinates.map(c => ({lat: c[1], lng: c[0]}));
+                
+                // Başlangıç ve bitiş durak isimlerini tekrar ata ki animateRoute tooltip'leri çalışsın
+                osrmCoords[0].name = modelData.RouteCoords[0].name;
+                osrmCoords[osrmCoords.length - 1].name = modelData.RouteCoords[modelData.RouteCoords.length - 1].name;
+                
+                animateRoute(osrmCoords, modelData.RouteCoords);
+            } else {
+                console.warn("DİKKAT: OSRM servisi hatası. Doğrusal çizgilere (Haversine) geri dönülüyor.");
+                animateRoute(modelData.RouteCoords, modelData.RouteCoords);
+            }
+        })
+        .catch(err => {
+            console.error("OSRM ağ hatası:", err, "Doğrusal çizgilere (Haversine) geri dönülüyor.");
+            animateRoute(modelData.RouteCoords, modelData.RouteCoords);
+        });
 }
 
 // Event Listeners
