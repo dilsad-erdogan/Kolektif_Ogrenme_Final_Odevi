@@ -20,6 +20,7 @@ def haversine(lon1, lat1, lon2, lat2):
     return R * c
 
 def main():
+    tum_metrikler = []
     print("="*50)
     print(" 1. AŞAMA: VERİ KEŞFİ (EDA) ")
     print("="*50)
@@ -109,32 +110,22 @@ def main():
          
     kalan_satir_sayisi = len(df_filtered)
     print(f"[-] Filtreleme ve temizleme sonrası toplam satır sayısı: {ilk_satir_sayisi} -> {kalan_satir_sayisi}")
-
-    print("\n[-] Temizlenmiş DataFrame'in İlk 5 Satırı:\n")
-    print(df_filtered.head())
     
     time.sleep(2)
     print("\n" + "="*50)
-    print(" 3. AŞAMA: RASTGELE ÖRNEKLEM SEÇİMİ (20 DURAK) ")
+    print(" 3. AŞAMA: RASTGELE ÖRNEKLEM SEÇİMİ (50 DURAK) ")
     print("="*50)
 
-    # 20 adet rastgele durak seç
+    # (Sunumlarda kod her çalıştığında aynı durağı versin ki sürpriz olmasın diye random_state=42 ayarlıyoruz)
+    # Veri sayısını arttırıyoruz (örneğin 50) ki modellerin performansı ve tercihleri farklılaşabilsin.
+    df_sampled = df_filtered.sample(n=50, random_state=42)
 
-    #rastgelelik
-    # # Artık 'random_state' sabitlemesi YOK, yani kodu her çağırdığınızda yepyeni 20 durak seçecek.
-    # df_sampled = df_filtered.sample(n=20)
+    print("[-] Temizlenmiş veri seti içinden rastgele 50 durak seçildi.")
 
-    # (Sunumlarda kod her çalıştığında aynı 20 durağı versin ki sürpriz olmasın diye random_state=42 ayarlıyoruz)
-    df_sampled = df_filtered.sample(n=20, random_state=42)
-
-    print("[-] Temizlenmiş veri seti içinden rastgele 20 durak seçildi.")
-    print("[-] Seçilen 20 durağın ilk 5 satırı:\n")
-    print(df_sampled.head())
-
-    # Sadece seçilen 20 satırı kaydet
+    # Sadece seçilen 50 satırı kaydet
     kayit_yolu = 'secilmis_veriler.csv'
     df_sampled.to_csv(kayit_yolu, index=False, encoding='utf-8')
-    print(f"\n[-] Sadece rastgele seçilen 20 durak '{kayit_yolu}' adıyla başarıyla kaydedildi.")
+    print(f"\n[-] Sadece rastgele seçilen 50 durak '{kayit_yolu}' adıyla başarıyla kaydedildi.")
 
     time.sleep(2)
     print("\n" + "="*50)
@@ -161,14 +152,30 @@ def main():
     # Görüntüleme için float yapalım
     mesafe_matrisi = mesafe_matrisi.astype(float)
                 
-    print("[-] Seçilen 20 durak arasındaki mesafeler Haversine formülü ile başarıyla hesaplandı.")
-    print("[-] Örnek olarak ilk 5 durağın birbirine olan mesafesi (km) tablosu:\n")
-    print(mesafe_matrisi.iloc[:5, :5].round(2))
+    print("[-] Seçilen duraklar arasındaki mesafeler Haversine formülü ile başarıyla hesaplandı.")
     
     # Matrisi CSV olarak kaydet
     matris_kayit_yolu = 'mesafe_matrisi.csv'
     mesafe_matrisi.to_csv(matris_kayit_yolu, encoding='utf-8')
-    print(f"\n[-] 20x20 Tam Mesafe Matrisi '{matris_kayit_yolu}' adıyla başarıyla kaydedildi.")
+    print(f"\n[-] Tam Mesafe Matrisi '{matris_kayit_yolu}' adıyla başarıyla kaydedildi.")
+
+    # Mesafe Matrisinin Sıcaklık Haritasını (Heatmap) Çıkaralım
+    try:
+        import seaborn as sns
+        plt.figure(figsize=(12, 10))
+        # Durak sayımız (Örn: 50) fazla olabileceği için eksen isimlerini gizliyoruz veya küçültüyoruz
+        sns.heatmap(mesafe_matrisi, cmap="YlOrRd", annot=False, xticklabels=False, yticklabels=False)
+        plt.title('Duraklar Arası Mesafe Sıcaklık Haritası (Heatmap) (km)', fontsize=15)
+        plt.xlabel('Varış Noktası (Duraklar)', fontsize=12)
+        plt.ylabel('Kalkış Noktası (Duraklar)', fontsize=12)
+        
+        heatmap_gorsel_yolu = 'mesafe_sicaklik_matrisi.png'
+        plt.savefig(heatmap_gorsel_yolu, dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"[-] Uzaklık ve yakınlık bağlarını gösteren sıcaklık haritası '{heatmap_gorsel_yolu}' adıyla başarıyla oluşturuldu.")
+    except Exception as e:
+        print(f"[-] Sıcaklık haritası çizimi sırasında bir hata oluştu: {e}")
+        print("    (Matrisi çok renkli görselleştirmek için 'seaborn' eksik olabilir. Lütfen 'pip install seaborn' yazınız.)")
 
     time.sleep(2)
     print("\n" + "="*50)
@@ -186,7 +193,7 @@ def main():
             plt.annotate(durak_kisa_adi, (row['Longitude'], row['Latitude']), 
                          xytext=(5, 5), textcoords='offset points', fontsize=8, zorder=6)
                          
-        plt.title('Seçilen 20 İETT Durağının Konum Dağılımı Haritası', fontsize=14)
+        plt.title(f'Seçilen {len(df_sampled)} İETT Durağının Konum Dağılımı Haritası', fontsize=14)
         plt.xlabel('Boylam (Longitude)', fontsize=12)
         plt.ylabel('Enlem (Latitude)', fontsize=12)
         plt.grid(True, linestyle='--', alpha=0.7, zorder=0)
@@ -196,7 +203,7 @@ def main():
         gorsel_yolu = 'secilen_duraklar_haritasi.png'
         plt.savefig(gorsel_yolu, dpi=300, bbox_inches='tight')
         plt.close() # Belleği temizle
-        print(f"[-] 20 durağın görsel haritası '{gorsel_yolu}' adıyla başarıyla tasarlanıp kaydedildi.")
+        print(f"[-] Seçilen durakların görsel haritası '{gorsel_yolu}' adıyla başarıyla tasarlanıp kaydedildi.")
     except Exception as e:
         print(f"[-] Görselleştirme aşamasında bir hata oluştu: {e}")
         print("    (Büyük ihtimalle matplotlib kütüphanesi eksik. Lütfen 'pip install matplotlib' ile kurun.)")
@@ -269,21 +276,38 @@ def main():
     print(f"[-] Bagging, Boosting ve Stacking için {len(df_edges)} satırlı Edge (Kenar) Veri Seti oluşturuldu.")
     print("[-] En Yakın Komşu (Nearest Neighbor) algoritması temel alınarak 'Is_On_Optimal_Route' hedefi(1 veya 0) belirlendi.")
     print(f"[-] Veri seti '{edge_csv_path}' adıyla kaydedildi.")
-    print("\n[-] Veri Setinden İlk 5 Satır:\n")
-    print(df_edges.head())
 
     # --- YENİ EKLENEN ROTA İNŞA FONKSİYONU ---
-    def rota_insa_et_ve_ciz(model_name, model, df_edges, X_all, n_durak, isimler, matris_df, df_sample):
-        # Tüm veri üzerinden modelin olasılık tahminlerini al (sınıf "1" dendiği durumların olasılığı)
-        probs = model.predict_proba(X_all)[:, 1]
+    def rota_insa_et_ve_ciz(model_name, model, df_edges, X_test, y_test, X_all, n_durak, isimler, matris_df, df_sample):
+        from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
         
+        # Test Verisi Üzerinden Gerçek Performans İncelemesi (Ezberi Bozmak İçin)
+        preds_test = model.predict(X_test)
+        probs_test = model.predict_proba(X_test)[:, 1]
+        
+        acc = accuracy_score(y_test, preds_test)
+        prec = precision_score(y_test, preds_test, zero_division=0)
+        rec = recall_score(y_test, preds_test, zero_division=0)
+        f1 = f1_score(y_test, preds_test, zero_division=0)
+        auc = roc_auc_score(y_test, probs_test)
+        
+        print(f"\n[+] {model_name} SINIFLANDIRMA PERFORMANSI (Görülmemiş Test Seti):")
+        print(f"    - Genel Başarı (Accuracy) : %{acc*100:.2f} (Öğrenilen/Tahmin Edilen Doğru Oranı)")
+        print(f"    - Kesinlik (Precision)    : %{prec*100:.2f} (Oluşturduğu rotaya 1 dediğinde ne kadar haklı?)")
+        print(f"    - Duyarlılık (Recall)     : %{rec*100:.2f} (Gerçek NN rotasının ne kadarını bulabildi?)")
+        print(f"    - F1 Skoru (Denge)        : %{f1*100:.2f} (Harmonik Ortalama)")
+        print(f"    - Eğri Altında Kalan Alan : %{auc*100:.2f} (ROC-AUC - Sınıfları Ayırt Edebilme Gücü)")
+        
+        # Rotayı Çizebilmek İçin Tüm Olasılıkları Çıkar
+        probs_all = model.predict_proba(X_all)[:, 1]
+
         # (N x N) boyutunda olasılık matrisi oluşturalım
         prob_matrix = [[0.0 for _ in range(n_durak)] for _ in range(n_durak)]
         idx = 0
         for i in range(n_durak):
             for j in range(n_durak):
                 if i != j:
-                    prob_matrix[i][j] = probs[idx]
+                    prob_matrix[i][j] = probs_all[idx]
                     idx += 1
                     
         # Hızlı erişim için numpy matrisi
@@ -330,7 +354,17 @@ def main():
                 best_overall_route = route
                 best_overall_start = start_node
                 
+        # Seçilen Nihai Rotanın Ortalama Olasılık Güvenini (Confidence) Hesapla
+        avg_confidence = 0
+        for i_idx in range(len(best_overall_route) - 1):
+            n1 = best_overall_route[i_idx]
+            n2 = best_overall_route[i_idx+1]
+            avg_confidence += prob_matrix[n1][n2]
+        if len(best_overall_route) > 1:
+            avg_confidence /= (len(best_overall_route) - 1)
+                
         print(f"\n[-] {model_name} Tarafından En Uygun Bulunan Başlangıç Noktası (Orijin): {isimler[best_overall_start]}")
+        print(f"[-] Bu rotanın model tarafından öngörülen ortalama seçilme olasılığı (Confidence): %{avg_confidence*100:.2f}")
         print(f"[-] Optimize Edilen En Kısa Açık Uçlu Rota Toplam Mesafesi: {best_overall_distance:.2f} km")
         print("\n[+] Rota İstikamet Adımları:")
         for step, n_idx in enumerate(best_overall_route):
@@ -382,6 +416,15 @@ def main():
         plt.savefig(g_name, dpi=300, bbox_inches='tight')
         plt.close()
         print(f"\n[-] Kesintisiz rota haritası '{g_name}' adıyla başarıyla kaydedildi.")
+        
+        return {
+            'Model': model_name,
+            'Accuracy': acc * 100,
+            'Precision': prec * 100,
+            'Recall': rec * 100,
+            'F1 Skoru': f1 * 100,
+            'ROC-AUC': auc * 100
+        }
 
 
     time.sleep(5)
@@ -389,18 +432,22 @@ def main():
     print(" 7. AŞAMA: RANDOM FOREST (BAGGING) İLE KESİNTİSİZ ROTA ÇİZİMİ ")
     print("="*50)
 
+    # Veri setimizi artık modeller farklı özellikler keşfetsin diye bölüyoruz.
+    # Böylece modeller tamamen her şeyi ezberleyemeyecek, farklı rotalar bulacaktır.
+    from sklearn.model_selection import train_test_split
+    X_tamami = df_edges[['Origin_Lon', 'Origin_Lat', 'Dest_Lon', 'Dest_Lat', 'Distance_km']]
+    y_hedef = df_edges['Is_On_Optimal_Route']
+    
+    X_train, X_test, y_train, y_test = train_test_split(X_tamami, y_hedef, test_size=0.3, stratify=y_hedef, random_state=42)
+
     try:
         from sklearn.ensemble import RandomForestClassifier
         
-        # Makine öğrenmesini "değerlendirici" (Heuristic Critic) olarak tüm veri setiyle eğitiyoruz. 
-        # Train/Test ayırmıyoruz, amacımız bu 20 duraklık haritada en iyi kuralı(path'i) buldurtmak.
-        X_tamami = df_edges[['Origin_Lon', 'Origin_Lat', 'Dest_Lon', 'Dest_Lat', 'Distance_km']]
-        y_hedef = df_edges['Is_On_Optimal_Route']
-        
-        rf_model = RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced')
-        rf_model.fit(X_tamami, y_hedef)
-        
-        rota_insa_et_ve_ciz('Random Forest', rf_model, df_edges, X_tamami, n, durak_isimleri, mesafe_matrisi, df_sampled)
+        # Modeli kısıtlamak (max_depth) aşırı öğrenmeyi engeller ve modelleri farklılaştırır.
+        rf_model = RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42, class_weight='balanced')
+        rf_model.fit(X_train, y_train)
+        m_rf = rota_insa_et_ve_ciz('Random Forest', rf_model, df_edges, X_test, y_test, X_tamami, n, durak_isimleri, mesafe_matrisi, df_sampled)
+        if m_rf: tum_metrikler.append(m_rf)
         
     except Exception as e:
         print(f"[-] Random Forest aşamasında bir hata oluştu: {e}")
@@ -413,11 +460,11 @@ def main():
     try:
         from xgboost import XGBClassifier
         
-        ratio = float(y_hedef.value_counts()[0]) / y_hedef.value_counts()[1]
-        xgb_model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', scale_pos_weight=ratio, random_state=42)
-        xgb_model.fit(X_tamami, y_hedef)
-        
-        rota_insa_et_ve_ciz('XGBoost', xgb_model, df_edges, X_tamami, n, durak_isimleri, mesafe_matrisi, df_sampled)
+        ratio = float(y_train.value_counts()[0]) / y_train.value_counts()[1]
+        xgb_model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', max_depth=3, scale_pos_weight=ratio, random_state=42)
+        xgb_model.fit(X_train, y_train)
+        m_xgb = rota_insa_et_ve_ciz('XGBoost', xgb_model, df_edges, X_test, y_test, X_tamami, n, durak_isimleri, mesafe_matrisi, df_sampled)
+        if m_xgb: tum_metrikler.append(m_xgb)
         
     except Exception as e:
         print(f"[-] XGBoost aşamasında bir hata oluştu: {e}")
@@ -434,18 +481,56 @@ def main():
         warnings.filterwarnings("ignore")
         
         base_models = [
-            ('rf', RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced')),
-            ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss', scale_pos_weight=ratio, random_state=42))
+            ('rf', RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42, class_weight='balanced')),
+            ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss', max_depth=3, scale_pos_weight=ratio, random_state=42))
         ]
         
         meta_model = LogisticRegression(class_weight='balanced', random_state=42)
         stack_model = StackingClassifier(estimators=base_models, final_estimator=meta_model, cv=5)
-        stack_model.fit(X_tamami, y_hedef)
-        
-        rota_insa_et_ve_ciz('Stacking Meta-Model', stack_model, df_edges, X_tamami, n, durak_isimleri, mesafe_matrisi, df_sampled)
+        stack_model.fit(X_train, y_train)
+        m_stack = rota_insa_et_ve_ciz('Stacking Meta-Model', stack_model, df_edges, X_test, y_test, X_tamami, n, durak_isimleri, mesafe_matrisi, df_sampled)
+        if m_stack: tum_metrikler.append(m_stack)
         
     except Exception as e:
         print(f"[-] Stacking aşamasında bir hata oluştu: {e}")
+
+    time.sleep(2)
+    print("\n" + "="*50)
+    print(" 10. AŞAMA: MODELLERİN PERFORMANS KIYASLAMA GRAFİĞİ ")
+    print("="*50)
+    
+    if len(tum_metrikler) > 0:
+        import numpy as np
+        df_metrics = pd.DataFrame(tum_metrikler)
+        metric_cols = ['Accuracy', 'Precision', 'Recall', 'F1 Skoru', 'ROC-AUC']
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        n_models = len(df_metrics)
+        width = 0.15
+        x = np.arange(len(metric_cols))
+        colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
+        
+        for i, row in df_metrics.iterrows():
+            bar_positions = x + (i * width) - (width * (n_models - 1) / 2)
+            metrik_degerleri = [row[col] for col in metric_cols]
+            ax.bar(bar_positions, metrik_degerleri, width, label=row['Model'], color=colors[i % len(colors)])
+                   
+        ax.set_ylabel('Yüzde (%)', fontsize=12)
+        ax.set_title('Test Verisi Üzerinde Modellerin Sınıflandırma Performansı Karşılaştırması', fontsize=14)
+        ax.set_xticks(x)
+        ax.set_xticklabels(metric_cols, fontsize=11)
+        ax.legend(title='Algoritmalar')
+        
+        plt.ylim(0, 105)
+        plt.grid(axis='y', linestyle='--', alpha=0.7)
+        
+        karsilastirma_gorsel_yolu = 'modellerin_kiyaslamasi.png'
+        plt.savefig(karsilastirma_gorsel_yolu, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        print(f"[-] Modellerin test seti üzerindeki performans metriklerini kıyaslayan grafik '{karsilastirma_gorsel_yolu}' adıyla oluşturulup kaydedildi.")
+    else:
+        print("[-] Metrik verisi bulunamadığı için grafik çizilemedi.")
 
 
 if __name__ == "__main__":
