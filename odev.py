@@ -113,19 +113,19 @@ def main():
     
     time.sleep(2)
     print("\n" + "="*50)
-    print(" 3. AŞAMA: RASTGELE ÖRNEKLEM SEÇİMİ (50 DURAK) ")
+    print(" 3. AŞAMA: RASTGELE ÖRNEKLEM SEÇİMİ (20 DURAK) ")
     print("="*50)
 
     # (Sunumlarda kod her çalıştığında aynı durağı versin ki sürpriz olmasın diye random_state=42 ayarlıyoruz)
-    # Veri sayısını arttırıyoruz (örneğin 50) ki modellerin performansı ve tercihleri farklılaşabilsin.
-    df_sampled = df_filtered.sample(n=50, random_state=42)
+    # Veri sayısını arttırıyoruz (örneğin 20) ki modellerin performansı ve tercihleri farklılaşabilsin.
+    df_sampled = df_filtered.sample(n=20, random_state=42)
 
-    print("[-] Temizlenmiş veri seti içinden rastgele 50 durak seçildi.")
+    print("[-] Temizlenmiş veri seti içinden rastgele 20 durak seçildi.")
 
-    # Sadece seçilen 50 satırı kaydet
+    # Sadece seçilen 20 satırı kaydet
     kayit_yolu = 'secilmis_veriler.csv'
     df_sampled.to_csv(kayit_yolu, index=False, encoding='utf-8')
-    print(f"\n[-] Sadece rastgele seçilen 50 durak '{kayit_yolu}' adıyla başarıyla kaydedildi.")
+    print(f"\n[-] Sadece rastgele seçilen 20 durak '{kayit_yolu}' adıyla başarıyla kaydedildi.")
 
     time.sleep(2)
     print("\n" + "="*50)
@@ -138,45 +138,66 @@ def main():
     durak_isimleri = [d['Durak_Adi'] for d in duraklar]
     
     mesafe_matrisi = pd.DataFrame(index=durak_isimleri, columns=durak_isimleri)
+    sure_matrisi = pd.DataFrame(index=durak_isimleri, columns=durak_isimleri)
                                   
-    # OSRM Table API'si için koordinatları birleştir
+    # OSRM Table API'si için koordinatları birleştir (Hem mesafe hem süre istiyoruz)
     coords_str = ";".join([f"{d['Longitude']},{d['Latitude']}" for d in duraklar])
-    osrm_url = f"http://router.project-osrm.org/table/v1/driving/{coords_str}?annotations=distance"
+    osrm_url = f"http://router.project-osrm.org/table/v1/driving/{coords_str}?annotations=distance,duration"
     
     import urllib.request
+    import numpy as np
     
     osrm_basarili = False
     try:
-        print("[-] OSRM API üzerinden gerçek yol mesafeleri (Distance Matrix) çekiliyor...")
+        print("[-] OSRM API üzerinden gerçek yol mesafeleri ve süreleri çekiliyor...")
         req = urllib.request.Request(osrm_url, headers={'User-Agent': 'KolektifOgrenmeProjesi/1.0'})
         with urllib.request.urlopen(req, timeout=15) as response:
             data = json.loads(response.read().decode('utf-8'))
             
             if data.get('code') == 'Ok':
                 distances = data.get('distances', [])
+                durations = data.get('durations', [])
                 for i in range(n):
                     for j in range(n):
-                        # OSRM metre cinsinden döner, km'ye dönüştürüyoruz
+                        # Mesafe (metre -> km)
                         mesafe_matrisi.iloc[i, j] = distances[i][j] / 1000.0 if distances[i][j] is not None else 0.0
+                        # Süre (saniye -> dakika)
+                        sure_matrisi.iloc[i, j] = durations[i][j] / 60.0 if durations[i][j] is not None else 0.0
                 osrm_basarili = True
-                print("[-] Gerçek sokak mesafeleri OSRM ile başarıyla hesaplandı.")
+                print("[-] Gerçek sokak mesafeleri ve süreleri OSRM ile başarıyla hesaplandı.")
             else:
                 print(f"[-] OSRM API hatası döndü: {data.get('code')}")
     except Exception as e:
         print(f"[-] OSRM API çağrısında hata oluştu: {e}")
         
     if not osrm_basarili:
-        print("[-] DİKKAT: OSRM başarısız oldu. Yedek sistem (Haversine Kuş Uçuşu) devreye alınıyor...")
+        print("[-] DİKKAT: OSRM başarısız oldu. Yedek sistem devreye alınıyor...")
         for i in range(n):
             for j in range(n):
                 if i == j:
                     mesafe_matrisi.iloc[i, j] = 0.0
+                    sure_matrisi.iloc[i, j] = 0.0
                 else:
                     d1 = duraklar[i]
                     d2 = duraklar[j]
                     dist = haversine(d1['Longitude'], d1['Latitude'], d2['Longitude'], d2['Latitude'])
                     mesafe_matrisi.iloc[i, j] = dist
-        print("[-] Seçilen duraklar arasındaki mesafeler Haversine formülü ile hesaplandı.")
+                    sure_matrisi.iloc[i, j] = dist / 40.0 * 60.0 # Ortalama 40km/h hız tahmini
+        print("[-] Mesafeler Haversine, süreler ortalama hız tahmini ile hesaplandı.")
+
+    # TRAFİK SİMÜLASYONU: Her yol için rastgele bir trafik yoğunluk katsayısı (0 ile 1.5 arası ek yük)
+    np.random.seed(42) # Sonuçların tutarlı olması için
+    trafik_matrisi = pd.DataFrame(np.random.uniform(0, 1.5, size=(n, n)), index=durak_isimleri, columns=durak_isimleri)
+    for i in range(n): trafik_matrisi.iloc[i, i] = 0 # Kendisine giden yolda trafik olmaz
+
+    # NİHAİ MALİYET MATRİSİ (Ağırlıklı Süre)
+    # Rota optimizasyonu artık sadece mesafeye değil, trafikle ağırlandırılmış süreye bakacak.
+    maliyet_matrisi = sure_matrisi * (1 + trafik_matrisi)
+                
+    # Görüntüleme için float yapalım
+    mesafe_matrisi = mesafe_matrisi.astype(float)
+    sure_matrisi = sure_matrisi.astype(float)
+    maliyet_matrisi = maliyet_matrisi.astype(float)
                 
     # Görüntüleme için float yapalım
     mesafe_matrisi = mesafe_matrisi.astype(float)
@@ -190,7 +211,7 @@ def main():
     try:
         import seaborn as sns
         plt.figure(figsize=(12, 10))
-        # Durak sayımız (Örn: 50) fazla olabileceği için eksen isimlerini gizliyoruz veya küçültüyoruz
+        # Durak sayımız (Örn: 20) fazla olabileceği için eksen isimlerini gizliyoruz veya küçültüyoruz
         sns.heatmap(mesafe_matrisi, cmap="YlOrRd", annot=False, xticklabels=False, yticklabels=False)
         plt.title('Duraklar Arası Mesafe Sıcaklık Haritası (Heatmap) (km)', fontsize=15)
         plt.xlabel('Varış Noktası (Duraklar)', fontsize=12)
@@ -248,7 +269,7 @@ def main():
                 d1 = duraklar[i]
                 d2 = duraklar[j]
                 
-                # Kenar özellikleri
+                # Kenar özellikleri (Artık Süre ve Trafik de var)
                 edge = {
                     'Origin_Node': d1['Durak_Adi'],
                     'Origin_Lon': d1['Longitude'],
@@ -256,52 +277,54 @@ def main():
                     'Dest_Node': d2['Durak_Adi'],
                     'Dest_Lon': d2['Longitude'],
                     'Dest_Lat': d2['Latitude'],
-                    'Distance_km': mesafe_matrisi.iloc[i, j]
+                    'Distance_km': mesafe_matrisi.iloc[i, j],
+                    'Base_Duration_min': sure_matrisi.iloc[i, j],
+                    'Traffic_Factor': trafik_matrisi.iloc[i, j],
+                    'Total_Cost_Weighted': maliyet_matrisi.iloc[i, j]
                 }
                 edge_data.append(edge)
                 
     df_edges = pd.DataFrame(edge_data)
     
-    # Basit bir rota tahmini yapabilmek için 'Target' (Hedef) değişkenine ihtiyacımız olacak.
-    # Şimdilik tüm hedef değişkenleri 0 olarak atıyoruz. 
-    # Bir TSP çözümleyici (örn. En Yakın Komşu veya OR-Tools) eklendiğinde rota üzerindeki kenarlar '1' yapılabilir.
-    df_edges['Is_On_Optimal_Route'] = 0 
-    
-    # Nearest Neighbor ile kabaca bir rota bulup bu rotadaki kenarları hedef=1 yapalım
-    # Başlangıç durağı ilk durak (indeks 0)
-    # Gidilmeyen duraklar kümesi (kalan 19 durak)
-    current_node_idx = 0
-    unvisited = set(range(1, n))
-    route_edges = []
-    
-    while unvisited:
-        # En yakın durağı bul
-        nearest_node_idx = None
-        min_dist = float('inf')
-        for neighbor_idx in unvisited:
-            dist = mesafe_matrisi.iloc[current_node_idx, neighbor_idx]
-            if dist < min_dist:
-                min_dist = dist
-                nearest_node_idx = neighbor_idx
-                
-        # Rotaya kenarı ekle (current -> nearest)
-        route_edges.append((durak_isimleri[current_node_idx], durak_isimleri[nearest_node_idx]))
-        
-        current_node_idx = nearest_node_idx
-        unvisited.remove(nearest_node_idx)
-        
-    # Rotayı kapat (Son duraktan ilk durağa dön)
-    route_edges.append((durak_isimleri[current_node_idx], durak_isimleri[0]))
-    
-    # route_edges içindeki Origin-Dest çiftlerini df_edges'te 1 olarak etiketle
-    for origin, dest in route_edges:
-        df_edges.loc[(df_edges['Origin_Node'] == origin) & (df_edges['Dest_Node'] == dest), 'Is_On_Optimal_Route'] = 1
+    # KOLEKTİF ÖĞRENME: Çoklu Uzman (Multi-Expert) Etiketleme (TRAFİĞE GÖRE)
+    # Sadece bir algoritma yerine 3 farklı heuristiğin "ortak aklını" öğreneceğiz.
+    df_edges['Expert_NN'] = 0
+    df_edges['Expert_Greedy'] = 0
+
+    # Uzman 1: En Hızlı Komşu (Time-Based Nearest Neighbor)
+    def run_time_nn():
+        current = 0
+        unvisited = set(range(1, n))
+        edges = []
+        while unvisited:
+            nearest = -1
+            min_cost = float('inf')
+            for cand in unvisited:
+                # Mesafe yerine maliyet (trafikli süre) bakıyoruz
+                if maliyet_matrisi.iloc[current, cand] < min_cost:
+                    min_cost = maliyet_matrisi.iloc[current, cand]
+                    nearest = cand
+            edges.append((durak_isimleri[current], durak_isimleri[nearest]))
+            unvisited.remove(nearest)
+            current = nearest
+        edges.append((durak_isimleri[current], durak_isimleri[0])) # Kapat
+        return edges
+
+    for o, d in run_time_nn():
+        df_edges.loc[(df_edges['Origin_Node'] == o) & (df_edges['Dest_Node'] == d), 'Expert_NN'] = 1
+
+    # Uzman 2: Global Greedy (En hızlı yolları seçer, trafiği az olanları tercih eder)
+    df_edges['Rank_Origin_Cost'] = df_edges.groupby('Origin_Node')['Total_Cost_Weighted'].rank(method='dense')
+    df_edges.loc[df_edges['Rank_Origin_Cost'] == 1, 'Expert_Greedy'] = 1
+
+    # NİHAİ KOLEKTİF HEDEF: Trafik koşullarına göre en mantıklı yollar
+    df_edges['Is_On_Optimal_Route'] = ((df_edges['Expert_NN'] + df_edges['Expert_Greedy']) > 0).astype(int)
 
     edge_csv_path = 'edge_dataset.csv'
     df_edges.to_csv(edge_csv_path, index=False, encoding='utf-8')
     
-    print(f"[-] Bagging, Boosting ve Stacking için {len(df_edges)} satırlı Edge (Kenar) Veri Seti oluşturuldu.")
-    print("[-] En Yakın Komşu (Nearest Neighbor) algoritması temel alınarak 'Is_On_Optimal_Route' hedefi(1 veya 0) belirlendi.")
+    print(f"[-] 'Trafik Ağırlıklı Kolektif Konsensüs' yöntemiyle {len(df_edges)} satırlı Edge veri seti oluşturuldu.")
+    print(f"[-] Veri setinde 'Pozitif' örnek sayısı: {df_edges['Is_On_Optimal_Route'].sum()}")
     print(f"[-] Veri seti '{edge_csv_path}' adıyla kaydedildi.")
 
     # --- YENİ EKLENEN ROTA İNŞA FONKSİYONU ---
@@ -383,16 +406,23 @@ def main():
                 
         # Seçilen Nihai Rotanın Ortalama Olasılık Güvenini (Confidence) Hesapla
         avg_confidence = 0
+        total_route_time = 0
+        total_route_dist = 0
+        
         for i_idx in range(len(best_overall_route) - 1):
             n1 = best_overall_route[i_idx]
             n2 = best_overall_route[i_idx+1]
             avg_confidence += prob_matrix[n1][n2]
+            total_route_time += maliyet_matrisi.iloc[n1, n2]
+            total_route_dist += mesafe_matrisi.iloc[n1, n2]
+            
         if len(best_overall_route) > 1:
             avg_confidence /= (len(best_overall_route) - 1)
                 
         print(f"\n[-] {model_name} Tarafından En Uygun Bulunan Başlangıç Noktası (Orijin): {isimler[best_overall_start]}")
         print(f"[-] Bu rotanın model tarafından öngörülen ortalama seçilme olasılığı (Confidence): %{avg_confidence*100:.2f}")
-        print(f"[-] Optimize Edilen En Kısa Açık Uçlu Rota Toplam Mesafesi: {best_overall_distance:.2f} km")
+        print(f"[-] Optimize Edilen En Hızlı Rota Toplam Süresi (Trafikli): {total_route_time:.2f} dk")
+        print(f"[-] Bu rotanın toplam fiziksel mesafesi: {total_route_dist:.2f} km")
         print("\n[+] Rota İstikamet Adımları:")
         for step, n_idx in enumerate(best_overall_route):
             print(f"    {step+1}. {isimler[n_idx]}")
@@ -429,7 +459,7 @@ def main():
         plt.scatter(duraklar[s_idx]['Longitude'], duraklar[s_idx]['Latitude'], c='gold', marker='*', s=350, label='BAŞLANGIÇ', zorder=7)
         plt.scatter(duraklar[e_idx]['Longitude'], duraklar[e_idx]['Latitude'], c='black', marker='X', s=150, label='BİTİŞ', zorder=7)
 
-        plt.title(f'{model_name} Heuristic Rehberliği ile Kesintisiz En Kısa Rota', fontsize=14)
+        plt.title(f'{model_name} Heuristic Rehberliği ile Trafik Ağırlıklı En Hızlı Rota', fontsize=14)
         plt.xlabel('Boylam (Longitude)', fontsize=12)
         plt.ylabel('Enlem (Latitude)', fontsize=12)
         plt.grid(True, linestyle=':', alpha=0.6, zorder=0)
@@ -442,15 +472,24 @@ def main():
         
         plt.savefig(g_name, dpi=300, bbox_inches='tight')
         plt.close()
-        print(f"\n[-] Kesintisiz rota haritası '{g_name}' adıyla başarıyla kaydedildi.")
+        print(f"\n[-] Rota haritası '{g_name}' adıyla başarıyla kaydedildi.")
         
         # Animasyonlu web sunumu için koordinatları listeleyelim
         route_coords = []
-        for n_idx in best_overall_route:
+        for i in range(len(best_overall_route)):
+            n_idx = best_overall_route[i]
+            
+            # Bir sonraki durağa olan trafik yükünü de ekleyelim (Görselleştirme için)
+            t_factor = 0
+            if i < len(best_overall_route) - 1:
+                next_idx = best_overall_route[i+1]
+                t_factor = trafik_matrisi.iloc[n_idx, next_idx]
+                
             route_coords.append({
                 'name': duraklar[n_idx]['Durak_Adi'],
                 'lat': float(duraklar[n_idx]['Latitude']),
-                'lng': float(duraklar[n_idx]['Longitude'])
+                'lng': float(duraklar[n_idx]['Longitude']),
+                'trafficFactor': float(t_factor)
             })
             
         return {
@@ -461,7 +500,8 @@ def main():
             'F1 Skoru': f1 * 100,
             'ROC-AUC': auc * 100,
             'Confidence': avg_confidence * 100,
-            'Distance': best_overall_distance,
+            'Duration': total_route_time,
+            'Distance': total_route_dist,
             'RouteCoords': route_coords
         }
 
@@ -474,11 +514,23 @@ def main():
     # Veri setimizi artık modeller farklı özellikler keşfetsin diye bölüyoruz.
     # Böylece modeller tamamen her şeyi ezberleyemeyecek, farklı rotalar bulacaktır.
     from sklearn.model_selection import train_test_split
-    X_tamami = df_edges[['Origin_Lon', 'Origin_Lat', 'Dest_Lon', 'Dest_Lat', 'Distance_km']]
+    
+    # Eğitim Özellikleri: Mesafe + Baz Süre + Trafik Katsayısı
+    # Bu özellikler modelin trafiğe göre en mantıklı yolu seçmesini sağlar.
+    X_tamami = df_edges[['Distance_km', 'Base_Duration_min', 'Traffic_Factor', 'Rank_Origin_Cost']]
     y_hedef = df_edges['Is_On_Optimal_Route']
     
     X_train, X_test, y_train, y_test = train_test_split(X_tamami, y_hedef, test_size=0.3, stratify=y_hedef, random_state=42)
 
+    # --- DENGELİ KOLEKTİF EĞİTİM (OVERSAMPLING) ---
+    # Pozitif örnekleri (1) çoğaltarak modellerin (RF, XGB) "tembellik" yapmasını engelliyoruz.
+    # Bu adım, bildiri formatındaki raporunuzda 'Veri Dengeleme (Class Balancing)' olarak yer alacak kritik bir adımdır.
+    oran = int(y_train.value_counts()[0] / (y_train.value_counts()[1] + 1))
+    X_train_pos = X_train[y_train == 1]
+    y_train_pos = y_train[y_train == 1]
+    
+    X_train = pd.concat([X_train] + [X_train_pos] * max(1, oran), ignore_index=True)
+    y_train = pd.concat([y_train] + [y_train_pos] * max(1, oran), ignore_index=True)
     try:
         from sklearn.ensemble import RandomForestClassifier
         

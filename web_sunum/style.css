@@ -139,6 +139,60 @@ body {
     color: #38bdf8;
 }
 
+.metric.highlight {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric.highlight .value {
+    color: var(--accent-orange);
+    font-size: 1.1rem;
+}
+
+#traffic-legend {
+    position: absolute;
+    bottom: 30px;
+    right: 20px;
+    background: var(--panel-bg);
+    padding: 1rem;
+    border-radius: 12px;
+    z-index: 10;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+#traffic-legend h4 {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.dot.green { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+.dot.orange { background: var(--accent-orange); box-shadow: 0 0 8px var(--accent-orange); }
+.dot.red { background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); }
+
+.traffic-status {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-left: auto;
+}
+
 .routes-panel h3 {
     font-size: 1.1rem;
     margin-bottom: 1rem;
