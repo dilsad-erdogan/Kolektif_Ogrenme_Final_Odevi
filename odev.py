@@ -22,7 +22,7 @@ def haversine(lon1, lat1, lon2, lat2):
 def main():
     tum_metrikler = []
     print("="*50)
-    print(" 1. AŞAMA: VERİ KEŞFİ (EDA) ")
+    print(" 1. AŞAMA: VERİ KEŞFİ ")
     print("="*50)
     
     file_path = 'IETT Bus Stops Data'
@@ -60,7 +60,7 @@ def main():
         
     print(f"[-] Geometrisi (Koordinatı) Eksik Durak Sayısı: {eksik_koordinat_sayisi}")
 
-    # ===== TEKRAR EDEN VERİ KONTROLÜ (EDA AŞAMASI) =====
+    # ===== TEKRAR EDEN VERİ KONTROLÜ =====
     tam_tekrar_eden_ham = df_raw.duplicated().sum()
     print(f"[-] Birebir Tekrar Eden Kayıt Sayısı (Tüm kolonları aynı olan): {tam_tekrar_eden_ham}")
     # Aynı durak kodu ile tekrar eden var mı diye bakalım
