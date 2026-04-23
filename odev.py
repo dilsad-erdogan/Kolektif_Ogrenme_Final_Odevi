@@ -3,6 +3,17 @@ import pandas as pd
 import math
 import matplotlib.pyplot as plt
 import time
+import os
+import urllib.request
+import numpy as np
+import seaborn as sns
+from scipy.spatial import KDTree
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier, StackingClassifier
+from sklearn.linear_model import LogisticRegression
+from xgboost import XGBClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+import warnings
 
 def haversine(lon1, lat1, lon2, lat2):
     """İki koordinat (boylam, enlem) arasındaki mesafeyi kilometre cinsinden hesaplar."""
@@ -87,6 +98,11 @@ def main():
         else:
             continue # Koordinatı olmayanları atlıyoruz
 
+        # Adalar (Islands) ILCEID: 1103. Driving routes (OSRM) are impossible there.
+        ilce_id = f.get('properties', {}).get('ILCEID', '')
+        if ilce_id == '1103':
+            continue
+
         filtrelenmis_veriler.append({
             'Durak_Adi': durak_adi,
             'Longitude': longitude_val,
@@ -116,9 +132,8 @@ def main():
     print(" 3. AŞAMA: RASTGELE ÖRNEKLEM SEÇİMİ (20 DURAK) ")
     print("="*50)
 
-    # (Sunumlarda kod her çalıştığında aynı durağı versin ki sürpriz olmasın diye random_state=42 ayarlıyoruz)
-    # Veri sayısını arttırıyoruz (örneğin 20) ki modellerin performansı ve tercihleri farklılaşabilsin.
-    df_sampled = df_filtered.sample(n=20, random_state=42)
+    # (Sunumlarda kod her çalıştığında aynı durağı versin ki sürpriz olmasın diye random_state=200 ayarlıyoruz - Yeni Senaryo)
+    df_sampled = df_filtered.sample(n=20, random_state=200)
 
     print("[-] Temizlenmiş veri seti içinden rastgele 20 durak seçildi.")
 
@@ -143,9 +158,6 @@ def main():
     # OSRM Table API'si için koordinatları birleştir (Hem mesafe hem süre istiyoruz)
     coords_str = ";".join([f"{d['Longitude']},{d['Latitude']}" for d in duraklar])
     osrm_url = f"http://router.project-osrm.org/table/v1/driving/{coords_str}?annotations=distance,duration"
-    
-    import urllib.request
-    import numpy as np
     
     osrm_basarili = False
     try:
@@ -185,31 +197,60 @@ def main():
                     sure_matrisi.iloc[i, j] = dist / 40.0 * 60.0 # Ortalama 40km/h hız tahmini
         print("[-] Mesafeler Haversine, süreler ortalama hız tahmini ile hesaplandı.")
 
-    # TRAFİK SİMÜLASYONU: Her yol için rastgele bir trafik yoğunluk katsayısı (0 ile 1.5 arası ek yük)
-    np.random.seed(42) # Sonuçların tutarlı olması için
-    trafik_matrisi = pd.DataFrame(np.random.uniform(0, 1.5, size=(n, n)), index=durak_isimleri, columns=durak_isimleri)
-    for i in range(n): trafik_matrisi.iloc[i, i] = 0 # Kendisine giden yolda trafik olmaz
+    # GERÇEK TRAFİK VERİSİ ENTEGRASYONU (Ocak 2025)
+    traffic_file = 'traffic_summary_hour8.csv'
+    if os.path.exists(traffic_file):
+        print(f"[-] '{traffic_file}' özet dosyası yüklendi, gerçek trafik desenleri eşleştiriliyor...")
+        df_traffic = pd.read_csv(traffic_file)
+        
+        # KDTree ile hızlı konumsal arama
+        traffic_coords = df_traffic[['LONGITUDE', 'LATITUDE']].values
+        tree = KDTree(traffic_coords)
+        
+        trafik_matrisi = pd.DataFrame(index=durak_isimleri, columns=durak_isimleri)
+        yogunluk_matrisi = pd.DataFrame(index=durak_isimleri, columns=durak_isimleri)
+        
+        for i in range(n):
+            for j in range(n):
+                if i == j:
+                    trafik_matrisi.iloc[i, j] = 0.0
+                    yogunluk_matrisi.iloc[i, j] = 0.0
+                else:
+                    # İki durak arasındaki orta noktayı baz alarak en yakın trafik verisini bulalım
+                    mid_lat = (duraklar[i]['Latitude'] + duraklar[j]['Latitude']) / 2.0
+                    mid_lon = (duraklar[i]['Longitude'] + duraklar[j]['Longitude']) / 2.0
+                    
+                    dist, idx = tree.query([mid_lon, mid_lat])
+                    node_traffic = df_traffic.iloc[idx]
+                    
+                    avg_v = node_traffic['AVERAGE_SPEED']
+                    max_v = node_traffic['MAXIMUM_SPEED']
+                    
+                    # Trafik faktörü: Hız kaybı oranı (Max hıza göre ne kadar yavaş?)
+                    # Eğer avg_v çok düşükse çarpan büyür.
+                    factor = (max_v / avg_v) - 1 if avg_v > 0 else 1.5
+                    trafik_matrisi.iloc[i, j] = factor
+                    yogunluk_matrisi.iloc[i, j] = node_traffic['NUMBER_OF_VEHICLES']
+                    
+        print("[-] Gerçek trafik yoğunlukları ve hız verileri başarıyla eşleştirildi.")
+    else:
+        print("[-] UYARI: Trafik özet dosyası bulunamadı. Rastgele simülasyon kullanılıyor...")
+        np.random.seed(100)
+        trafik_matrisi = pd.DataFrame(np.random.uniform(0, 1.5, size=(n, n)), index=durak_isimleri, columns=durak_isimleri)
+        yogunluk_matrisi = pd.DataFrame(0, index=durak_isimleri, columns=durak_isimleri)
+        for i in range(n): trafik_matrisi.iloc[i, i] = 0
 
-    # NİHAİ MALİYET MATRİSİ (Ağırlıklı Süre)
-    # Rota optimizasyonu artık sadece mesafeye değil, trafikle ağırlandırılmış süreye bakacak.
-    maliyet_matrisi = sure_matrisi * (1 + trafik_matrisi)
+    # NİHAİ MALİYET MATRİSİ (Gerçek Trafik Ağırlıklı Süre)
+    maliyet_matrisi = sure_matrisi * (1 + trafik_matrisi.astype(float))
                 
-    # Görüntüleme için float yapalım
-    mesafe_matrisi = mesafe_matrisi.astype(float)
-    sure_matrisi = sure_matrisi.astype(float)
-    maliyet_matrisi = maliyet_matrisi.astype(float)
-                
-    # Görüntüleme için float yapalım
-    mesafe_matrisi = mesafe_matrisi.astype(float)
-    
     # Matrisi CSV olarak kaydet
     matris_kayit_yolu = 'mesafe_matrisi.csv'
+    mesafe_matrisi = mesafe_matrisi.astype(float)
     mesafe_matrisi.to_csv(matris_kayit_yolu, encoding='utf-8')
     print(f"\n[-] Tam Mesafe Matrisi '{matris_kayit_yolu}' adıyla başarıyla kaydedildi.")
 
     # Mesafe Matrisinin Sıcaklık Haritasını (Heatmap) Çıkaralım
     try:
-        import seaborn as sns
         plt.figure(figsize=(12, 10))
         # Durak sayımız (Örn: 20) fazla olabileceği için eksen isimlerini gizliyoruz veya küçültüyoruz
         sns.heatmap(mesafe_matrisi, cmap="YlOrRd", annot=False, xticklabels=False, yticklabels=False)
@@ -269,7 +310,7 @@ def main():
                 d1 = duraklar[i]
                 d2 = duraklar[j]
                 
-                # Kenar özellikleri (Artık Süre ve Trafik de var)
+                # Kenar özellikleri (Artık Gerçek Süre ve Araç Sayısı da var)
                 edge = {
                     'Origin_Node': d1['Durak_Adi'],
                     'Origin_Lon': d1['Longitude'],
@@ -280,6 +321,7 @@ def main():
                     'Distance_km': mesafe_matrisi.iloc[i, j],
                     'Base_Duration_min': sure_matrisi.iloc[i, j],
                     'Traffic_Factor': trafik_matrisi.iloc[i, j],
+                    'Vehicle_Density': yogunluk_matrisi.iloc[i, j],
                     'Total_Cost_Weighted': maliyet_matrisi.iloc[i, j]
                 }
                 edge_data.append(edge)
@@ -329,8 +371,6 @@ def main():
 
     # --- YENİ EKLENEN ROTA İNŞA FONKSİYONU ---
     def rota_insa_et_ve_ciz(model_name, model, df_edges, X_test, y_test, X_all, n_durak, isimler, matris_df, df_sample):
-        from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
-        
         # Test Verisi Üzerinden Gerçek Performans İncelemesi (Ezberi Bozmak İçin)
         preds_test = model.predict(X_test)
         probs_test = model.predict_proba(X_test)[:, 1]
@@ -512,12 +552,10 @@ def main():
     print("="*50)
 
     # Veri setimizi artık modeller farklı özellikler keşfetsin diye bölüyoruz.
-    # Böylece modeller tamamen her şeyi ezberleyemeyecek, farklı rotalar bulacaktır.
-    from sklearn.model_selection import train_test_split
     
-    # Eğitim Özellikleri: Mesafe + Baz Süre + Trafik Katsayısı
-    # Bu özellikler modelin trafiğe göre en mantıklı yolu seçmesini sağlar.
-    X_tamami = df_edges[['Distance_km', 'Base_Duration_min', 'Traffic_Factor', 'Rank_Origin_Cost']]
+    # Eğitim Özellikleri: Mesafe + Baz Süre + Trafik Katsayısı + Araç Yoğunluğu
+    # Bu özellikler modelin GERÇEK trafiğe göre en mantıklı yolu seçmesini sağlar.
+    X_tamami = df_edges[['Distance_km', 'Base_Duration_min', 'Traffic_Factor', 'Vehicle_Density', 'Rank_Origin_Cost']]
     y_hedef = df_edges['Is_On_Optimal_Route']
     
     X_train, X_test, y_train, y_test = train_test_split(X_tamami, y_hedef, test_size=0.3, stratify=y_hedef, random_state=42)
@@ -532,8 +570,6 @@ def main():
     X_train = pd.concat([X_train] + [X_train_pos] * max(1, oran), ignore_index=True)
     y_train = pd.concat([y_train] + [y_train_pos] * max(1, oran), ignore_index=True)
     try:
-        from sklearn.ensemble import RandomForestClassifier
-        
         # Modeli kısıtlamak (max_depth) aşırı öğrenmeyi engeller ve modelleri farklılaştırır.
         rf_model = RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42, class_weight='balanced')
         rf_model.fit(X_train, y_train)
@@ -549,8 +585,6 @@ def main():
     print("="*50)
 
     try:
-        from xgboost import XGBClassifier
-        
         ratio = float(y_train.value_counts()[0]) / y_train.value_counts()[1]
         xgb_model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', max_depth=3, scale_pos_weight=ratio, random_state=42)
         xgb_model.fit(X_train, y_train)
@@ -566,9 +600,6 @@ def main():
     print("="*50)
 
     try:
-        from sklearn.ensemble import StackingClassifier
-        from sklearn.linear_model import LogisticRegression
-        import warnings
         warnings.filterwarnings("ignore")
         
         base_models = [
@@ -591,7 +622,6 @@ def main():
     print("="*50)
     
     if len(tum_metrikler) > 0:
-        import numpy as np
         df_metrics = pd.DataFrame(tum_metrikler)
         metric_cols = ['Accuracy', 'Precision', 'Recall', 'F1 Skoru', 'ROC-AUC']
         
@@ -623,8 +653,6 @@ def main():
         
         # WEB SUNUMU İÇİN DATAYI DIŞARI ÇIKARMA
         try:
-            import os
-            
             web_folder = 'web_sunum'
             if not os.path.exists(web_folder):
                 os.makedirs(web_folder)
@@ -636,7 +664,6 @@ def main():
             
             class NumpyEncoder(json.JSONEncoder):
                 def default(self, obj):
-                    import numpy as np
                     if isinstance(obj, np.floating):
                         return float(obj)
                     if isinstance(obj, np.integer):

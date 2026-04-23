@@ -1,502 +1,502 @@
 const presentationData = {
   "allStops": [
     {
-      "Durak_Adi": "FEVZİ ÇAKMAK CADDESİ",
-      "Longitude": 28.7165869999779,
-      "Latitude": 40.9984380005531
+      "Durak_Adi": "GÜRPINAR CADDESİ",
+      "Longitude": 28.6059249999683,
+      "Latitude": 40.9964460005525
     },
     {
-      "Durak_Adi": "ÇATALCA DEVLET HASTANESİ ACİL GİRİŞİ",
-      "Longitude": 28.4656043141045,
-      "Latitude": 41.1356651078862
+      "Durak_Adi": "KISIKLI",
+      "Longitude": 29.0629999999908,
+      "Latitude": 41.0220920005574
     },
     {
-      "Durak_Adi": "ŞERİF AĞA",
-      "Longitude": 28.0021162614193,
-      "Latitude": 41.0972543820986
+      "Durak_Adi": "BEYKENT",
+      "Longitude": 28.631458944095,
+      "Latitude": 41.0193465787747
     },
     {
-      "Durak_Adi": "AYDIN",
-      "Longitude": 28.6743659999746,
-      "Latitude": 41.0336980005586
+      "Durak_Adi": "TUNA CADDESİ",
+      "Longitude": 29.2228529999932,
+      "Latitude": 40.9776540005503
     },
     {
-      "Durak_Adi": "ŞEHİT EROL OLÇOK",
-      "Longitude": 29.0419569999904,
-      "Latitude": 41.0213840005572
+      "Durak_Adi": "HOŞSOHBET SOKAK",
+      "Longitude": 29.0087349999896,
+      "Latitude": 41.0623000005637
     },
     {
-      "Durak_Adi": "SU TERAZİSİ",
-      "Longitude": 28.7784149999817,
-      "Latitude": 41.0029450005539
+      "Durak_Adi": "BİZİMTEPE ",
+      "Longitude": 29.1036700385189,
+      "Latitude": 41.2203119961708
     },
     {
-      "Durak_Adi": "AŞIK MAHSUNİ ŞERİF CADDESİ",
-      "Longitude": 29.1870010000103,
-      "Latitude": 40.9976309991169
+      "Durak_Adi": "BORSA İSTANBUL MESLEKİ VE TEKNİK ANADOLU LİSESİ",
+      "Longitude": 28.8052429999828,
+      "Latitude": 41.0869570005674
     },
     {
-      "Durak_Adi": "BLOKLAR- ŞEHİT MEHMET CİVAK",
-      "Longitude": 28.9994669645928,
-      "Latitude": 41.1220159650117
+      "Durak_Adi": "DAVUTPAŞA",
+      "Longitude": 28.9442709999882,
+      "Latitude": 41.0040240005543
     },
     {
-      "Durak_Adi": "SÜNNET KÖPRÜSÜ",
-      "Longitude": 28.9510299999882,
-      "Latitude": 41.0635170005639
+      "Durak_Adi": "ÇAMLIKTEPE",
+      "Longitude": 28.7010590000065,
+      "Latitude": 41.2318519991116
     },
     {
-      "Durak_Adi": "BİLGİ SOKAK",
-      "Longitude": 29.0325950309239,
-      "Latitude": 41.0930880443516
+      "Durak_Adi": "4.LEVENT",
+      "Longitude": 29.0076379999895,
+      "Latitude": 41.0857950005676
     },
     {
-      "Durak_Adi": "LİLYUM SOKAK",
-      "Longitude": 28.7123323385955,
-      "Latitude": 41.0736702937127
+      "Durak_Adi": "ŞİFA SONDURAK",
+      "Longitude": 29.3650080000083,
+      "Latitude": 40.8276519991206
     },
     {
-      "Durak_Adi": "ESENKENT PARK",
-      "Longitude": 28.6693000000048,
-      "Latitude": 41.0608999991152
+      "Durak_Adi": "MİLLET BAHÇESİ",
+      "Longitude": 29.0521619999903,
+      "Latitude": 41.0242130005574
     },
     {
-      "Durak_Adi": "GÖĞÜS HASTANESİ",
-      "Longitude": 28.9165884776912,
-      "Latitude": 41.0002834089139
+      "Durak_Adi": "SARIYER HAMİDİYE ETFAL EĞİTİM VE ARAŞTIRMA HASTANESİ",
+      "Longitude": 29.0267880000116,
+      "Latitude": 41.1556169991135
     },
     {
-      "Durak_Adi": "VİLLALAR",
-      "Longitude": 29.3264570000089,
-      "Latitude": 41.088738999115
+      "Durak_Adi": "KARABEYLİ SAPAĞI",
+      "Longitude": 29.7344639999977,
+      "Latitude": 41.0946530005692
     },
     {
-      "Durak_Adi": "SEVBAN MEHMET CADDESİ",
-      "Longitude": 28.7327939999782,
-      "Latitude": 41.2081150005869
+      "Durak_Adi": "SU DEPOSU",
+      "Longitude": 28.7532329999801,
+      "Latitude": 41.0681410005644
     },
     {
-      "Durak_Adi": "BEZMİALEM VAKIF ÜNİVERSİTESİ",
-      "Longitude": 28.9342369999879,
-      "Latitude": 41.020832000557
+      "Durak_Adi": "MİRALAY ÇIKMAZI",
+      "Longitude": 29.2001740000103,
+      "Latitude": 40.9720839991175
     },
     {
-      "Durak_Adi": "ŞEHİT TAHSİN GEREKLİ",
-      "Longitude": 28.7143569999776,
-      "Latitude": 41.0641270005636
+      "Durak_Adi": "YENİ MAHALLE",
+      "Longitude": 28.9200109999874,
+      "Latitude": 41.0541220005623
     },
     {
-      "Durak_Adi": "SELÇUKLAR CAMİİ",
-      "Longitude": 29.1141739999917,
-      "Latitude": 40.9782920005503
+      "Durak_Adi": "AHESTE SOKAK",
+      "Longitude": 29.1222169999918,
+      "Latitude": 41.0229330005575
     },
     {
-      "Durak_Adi": "ŞEHİT ASKERİ ÇOBAN",
-      "Longitude": 29.1030369999914,
-      "Latitude": 41.0487400005617
+      "Durak_Adi": "YAVUZ SOKAK",
+      "Longitude": 28.7073779999766,
+      "Latitude": 41.1894580005839
     },
     {
-      "Durak_Adi": "NEVZAT AYAZ ANADOLU LİSESİ",
-      "Longitude": 29.1050839603896,
-      "Latitude": 41.0305569600878
+      "Durak_Adi": "SAĞLIK OCAĞI CADDESİ",
+      "Longitude": 28.3615429619885,
+      "Latitude": 41.2545515058788
     }
   ],
   "models": [
     {
       "Model": "Random Forest",
-      "Accuracy": 92.10526315789474,
-      "Precision": 54.54545454545454,
+      "Accuracy": 92.98245614035088,
+      "Precision": 60.0,
       "Recall": 60.0,
-      "F1 Skoru": 57.14285714285714,
-      "ROC-AUC": 82.01923076923077,
-      "Confidence": 73.33434683959963,
-      "Duration": 396.593799181804,
-      "Distance": 301.19980000000004,
+      "F1 Skoru": 60.0,
+      "ROC-AUC": 92.59615384615384,
+      "Confidence": 70.31323060976372,
+      "Duration": 1062.803680079703,
+      "Distance": 501.27259999999995,
       "RouteCoords": [
         {
-          "name": "BEZMİALEM VAKIF ÜNİVERSİTESİ",
-          "lat": 41.020832000557,
-          "lng": 28.9342369999879,
-          "trafficFactor": 0.038026115123186266
+          "name": "MİRALAY ÇIKMAZI",
+          "lat": 40.9720839991175,
+          "lng": 29.2001740000103,
+          "trafficFactor": 2.441944847605225
         },
         {
-          "name": "GÖĞÜS HASTANESİ",
-          "lat": 41.0002834089139,
-          "lng": 28.9165884776912,
-          "trafficFactor": 0.023184924793301143
+          "name": "TUNA CADDESİ",
+          "lat": 40.9776540005503,
+          "lng": 29.2228529999932,
+          "trafficFactor": 1.0739436619718314
         },
         {
-          "name": "ŞEHİT EROL OLÇOK",
-          "lat": 41.0213840005572,
-          "lng": 29.0419569999904,
-          "trafficFactor": 0.16183714048995668
+          "name": "ŞİFA SONDURAK",
+          "lat": 40.8276519991206,
+          "lng": 29.3650080000083,
+          "trafficFactor": 0.8284431137724553
         },
         {
-          "name": "NEVZAT AYAZ ANADOLU LİSESİ",
-          "lat": 41.0305569600878,
-          "lng": 29.1050839603896,
-          "trafficFactor": 1.126306601687246
+          "name": "KARABEYLİ SAPAĞI",
+          "lat": 41.0946530005692,
+          "lng": 29.7344639999977,
+          "trafficFactor": 0.5328322784810127
         },
         {
-          "name": "ŞEHİT ASKERİ ÇOBAN",
-          "lat": 41.0487400005617,
-          "lng": 29.1030369999914,
-          "trafficFactor": 0.0349079036037388
+          "name": "AHESTE SOKAK",
+          "lat": 41.0229330005575,
+          "lng": 29.1222169999918,
+          "trafficFactor": 2.228245363766049
         },
         {
-          "name": "SELÇUKLAR CAMİİ",
-          "lat": 40.9782920005503,
-          "lng": 29.1141739999917,
-          "trafficFactor": 0.9526404763014658
+          "name": "KISIKLI",
+          "lat": 41.0220920005574,
+          "lng": 29.0629999999908,
+          "trafficFactor": 2.0703735881841876
         },
         {
-          "name": "AŞIK MAHSUNİ ŞERİF CADDESİ",
-          "lat": 40.9976309991169,
-          "lng": 29.1870010000103,
-          "trafficFactor": 0.5064227571054419
+          "name": "MİLLET BAHÇESİ",
+          "lat": 41.0242130005574,
+          "lng": 29.0521619999903,
+          "trafficFactor": 1.3060975609756098
         },
         {
-          "name": "VİLLALAR",
-          "lat": 41.088738999115,
-          "lng": 29.3264570000089,
-          "trafficFactor": 0.44038776639674004
+          "name": "HOŞSOHBET SOKAK",
+          "lat": 41.0623000005637,
+          "lng": 29.0087349999896,
+          "trafficFactor": 2.1476923076923073
         },
         {
-          "name": "BİLGİ SOKAK",
-          "lat": 41.0930880443516,
-          "lng": 29.0325950309239,
-          "trafficFactor": 0.8328012173991934
+          "name": "4.LEVENT",
+          "lat": 41.0857950005676,
+          "lng": 29.0076379999895,
+          "trafficFactor": 1.4996400287976965
         },
         {
-          "name": "BLOKLAR- ŞEHİT MEHMET CİVAK",
-          "lat": 41.1220159650117,
-          "lng": 28.9994669645928,
-          "trafficFactor": 0.07721812687498403
+          "name": "SARIYER HAMİDİYE ETFAL EĞİTİM VE ARAŞTIRMA HASTANESİ",
+          "lat": 41.1556169991135,
+          "lng": 29.0267880000116,
+          "trafficFactor": 0.9375
         },
         {
-          "name": "SÜNNET KÖPRÜSÜ",
-          "lat": 41.0635170005639,
-          "lng": 28.9510299999882,
-          "trafficFactor": 0.024881743391784228
+          "name": "BİZİMTEPE ",
+          "lat": 41.2203119961708,
+          "lng": 29.1036700385189,
+          "trafficFactor": 0.8685770750988142
         },
         {
-          "name": "ESENKENT PARK",
-          "lat": 41.0608999991152,
-          "lng": 28.6693000000048,
-          "trafficFactor": 0.5515737045891502
+          "name": "YAVUZ SOKAK",
+          "lat": 41.1894580005839,
+          "lng": 28.7073779999766,
+          "trafficFactor": 1.7119155354449473
         },
         {
-          "name": "AYDIN",
-          "lat": 41.0336980005586,
-          "lng": 28.6743659999746,
-          "trafficFactor": 0.583015934534223
+          "name": "ÇAMLIKTEPE",
+          "lat": 41.2318519991116,
+          "lng": 28.7010590000065,
+          "trafficFactor": 0.9001482946119623
         },
         {
-          "name": "FEVZİ ÇAKMAK CADDESİ",
-          "lat": 40.9984380005531,
-          "lng": 28.7165869999779,
-          "trafficFactor": 0.23399178050430397
+          "name": "BORSA İSTANBUL MESLEKİ VE TEKNİK ANADOLU LİSESİ",
+          "lat": 41.0869570005674,
+          "lng": 28.8052429999828,
+          "trafficFactor": 1.1488277268093783
         },
         {
-          "name": "SU TERAZİSİ",
-          "lat": 41.0029450005539,
-          "lng": 28.7784149999817,
-          "trafficFactor": 0.43462717937065204
+          "name": "SU DEPOSU",
+          "lat": 41.0681410005644,
+          "lng": 28.7532329999801,
+          "trafficFactor": 1.0208471211118466
         },
         {
-          "name": "LİLYUM SOKAK",
-          "lat": 41.0736702937127,
-          "lng": 28.7123323385955,
-          "trafficFactor": 0.4880995472389016
+          "name": "SAĞLIK OCAĞI CADDESİ",
+          "lat": 41.2545515058788,
+          "lng": 28.3615429619885,
+          "trafficFactor": 1.1120495495495497
         },
         {
-          "name": "ŞEHİT TAHSİN GEREKLİ",
-          "lat": 41.0641270005636,
-          "lng": 28.7143569999776,
-          "trafficFactor": 0.06900396303262912
+          "name": "DAVUTPAŞA",
+          "lat": 41.0040240005543,
+          "lng": 28.9442709999882,
+          "trafficFactor": 2.6059027777777777
         },
         {
-          "name": "SEVBAN MEHMET CADDESİ",
-          "lat": 41.2081150005869,
-          "lng": 28.7327939999782,
-          "trafficFactor": 0.5069927352773037
+          "name": "GÜRPINAR CADDESİ",
+          "lat": 40.9964460005525,
+          "lng": 28.6059249999683,
+          "trafficFactor": 2.394911504424779
         },
         {
-          "name": "ÇATALCA DEVLET HASTANESİ ACİL GİRİŞİ",
-          "lat": 41.1356651078862,
-          "lng": 28.4656043141045,
-          "trafficFactor": 0.43821697280282723
+          "name": "BEYKENT",
+          "lat": 41.0193465787747,
+          "lng": 28.631458944095,
+          "trafficFactor": 1.943728018757327
         },
         {
-          "name": "ŞERİF AĞA",
-          "lat": 41.0972543820986,
-          "lng": 28.0021162614193,
+          "name": "YENİ MAHALLE",
+          "lat": 41.0541220005623,
+          "lng": 28.9200109999874,
           "trafficFactor": 0.0
         }
       ]
     },
     {
       "Model": "XGBoost",
-      "Accuracy": 95.6140350877193,
-      "Precision": 85.71428571428571,
+      "Accuracy": 93.85964912280701,
+      "Precision": 66.66666666666666,
       "Recall": 60.0,
-      "F1 Skoru": 70.58823529411765,
-      "ROC-AUC": 87.25961538461539,
-      "Confidence": 69.23088073730469,
-      "Duration": 462.1847932052042,
-      "Distance": 349.53589999999997,
+      "F1 Skoru": 63.1578947368421,
+      "ROC-AUC": 93.07692307692308,
+      "Confidence": 74.36219787597656,
+      "Duration": 997.3033625931045,
+      "Distance": 491.1241999999999,
       "RouteCoords": [
         {
-          "name": "ŞEHİT EROL OLÇOK",
-          "lat": 41.0213840005572,
-          "lng": 29.0419569999904,
-          "trafficFactor": 0.16183714048995668
+          "name": "SAĞLIK OCAĞI CADDESİ",
+          "lat": 41.2545515058788,
+          "lng": 28.3615429619885,
+          "trafficFactor": 0.7137323943661975
         },
         {
-          "name": "NEVZAT AYAZ ANADOLU LİSESİ",
-          "lat": 41.0305569600878,
-          "lng": 29.1050839603896,
-          "trafficFactor": 1.126306601687246
+          "name": "ÇAMLIKTEPE",
+          "lat": 41.2318519991116,
+          "lng": 28.7010590000065,
+          "trafficFactor": 1.7119155354449473
         },
         {
-          "name": "ŞEHİT ASKERİ ÇOBAN",
-          "lat": 41.0487400005617,
-          "lng": 29.1030369999914,
-          "trafficFactor": 0.0349079036037388
+          "name": "YAVUZ SOKAK",
+          "lat": 41.1894580005839,
+          "lng": 28.7073779999766,
+          "trafficFactor": 0.9068728522336771
         },
         {
-          "name": "SELÇUKLAR CAMİİ",
-          "lat": 40.9782920005503,
-          "lng": 29.1141739999917,
-          "trafficFactor": 0.9526404763014658
+          "name": "YENİ MAHALLE",
+          "lat": 41.0541220005623,
+          "lng": 28.9200109999874,
+          "trafficFactor": 0.42928039702233245
         },
         {
-          "name": "AŞIK MAHSUNİ ŞERİF CADDESİ",
-          "lat": 40.9976309991169,
-          "lng": 29.1870010000103,
-          "trafficFactor": 0.5064227571054419
+          "name": "AHESTE SOKAK",
+          "lat": 41.0229330005575,
+          "lng": 29.1222169999918,
+          "trafficFactor": 2.228245363766049
         },
         {
-          "name": "VİLLALAR",
-          "lat": 41.088738999115,
-          "lng": 29.3264570000089,
-          "trafficFactor": 0.44038776639674004
+          "name": "KISIKLI",
+          "lat": 41.0220920005574,
+          "lng": 29.0629999999908,
+          "trafficFactor": 2.0703735881841876
         },
         {
-          "name": "BİLGİ SOKAK",
-          "lat": 41.0930880443516,
-          "lng": 29.0325950309239,
-          "trafficFactor": 0.8328012173991934
+          "name": "MİLLET BAHÇESİ",
+          "lat": 41.0242130005574,
+          "lng": 29.0521619999903,
+          "trafficFactor": 1.3060975609756098
         },
         {
-          "name": "BLOKLAR- ŞEHİT MEHMET CİVAK",
-          "lat": 41.1220159650117,
-          "lng": 28.9994669645928,
-          "trafficFactor": 0.07721812687498403
+          "name": "HOŞSOHBET SOKAK",
+          "lat": 41.0623000005637,
+          "lng": 29.0087349999896,
+          "trafficFactor": 2.1476923076923073
         },
         {
-          "name": "SÜNNET KÖPRÜSÜ",
-          "lat": 41.0635170005639,
-          "lng": 28.9510299999882,
-          "trafficFactor": 0.26154964350748716
+          "name": "4.LEVENT",
+          "lat": 41.0857950005676,
+          "lng": 29.0076379999895,
+          "trafficFactor": 1.4996400287976965
         },
         {
-          "name": "BEZMİALEM VAKIF ÜNİVERSİTESİ",
-          "lat": 41.020832000557,
-          "lng": 28.9342369999879,
-          "trafficFactor": 0.038026115123186266
+          "name": "SARIYER HAMİDİYE ETFAL EĞİTİM VE ARAŞTIRMA HASTANESİ",
+          "lat": 41.1556169991135,
+          "lng": 29.0267880000116,
+          "trafficFactor": 0.9375
         },
         {
-          "name": "GÖĞÜS HASTANESİ",
-          "lat": 41.0002834089139,
-          "lng": 28.9165884776912,
-          "trafficFactor": 0.44167333810437853
+          "name": "BİZİMTEPE ",
+          "lat": 41.2203119961708,
+          "lng": 29.1036700385189,
+          "trafficFactor": 1.038242200603824
         },
         {
-          "name": "LİLYUM SOKAK",
-          "lat": 41.0736702937127,
-          "lng": 28.7123323385955,
-          "trafficFactor": 0.4880995472389016
+          "name": "BEYKENT",
+          "lat": 41.0193465787747,
+          "lng": 28.631458944095,
+          "trafficFactor": 2.394911504424779
         },
         {
-          "name": "ŞEHİT TAHSİN GEREKLİ",
-          "lat": 41.0641270005636,
-          "lng": 28.7143569999776,
-          "trafficFactor": 0.41990084541891426
+          "name": "GÜRPINAR CADDESİ",
+          "lat": 40.9964460005525,
+          "lng": 28.6059249999683,
+          "trafficFactor": 0.42384887839433283
         },
         {
-          "name": "AYDIN",
-          "lat": 41.0336980005586,
-          "lng": 28.6743659999746,
-          "trafficFactor": 0.2980735223012586
+          "name": "KARABEYLİ SAPAĞI",
+          "lat": 41.0946530005692,
+          "lng": 29.7344639999977,
+          "trafficFactor": 0.8284431137724553
         },
         {
-          "name": "ESENKENT PARK",
-          "lat": 41.0608999991152,
-          "lng": 28.6693000000048,
-          "trafficFactor": 0.36598446506862536
+          "name": "ŞİFA SONDURAK",
+          "lat": 40.8276519991206,
+          "lng": 29.3650080000083,
+          "trafficFactor": 1.0739436619718314
         },
         {
-          "name": "SU TERAZİSİ",
-          "lat": 41.0029450005539,
-          "lng": 28.7784149999817,
-          "trafficFactor": 0.04714377853010138
+          "name": "TUNA CADDESİ",
+          "lat": 40.9776540005503,
+          "lng": 29.2228529999932,
+          "trafficFactor": 2.441944847605225
         },
         {
-          "name": "FEVZİ ÇAKMAK CADDESİ",
-          "lat": 40.9984380005531,
-          "lng": 28.7165869999779,
-          "trafficFactor": 0.2727374508106509
+          "name": "MİRALAY ÇIKMAZI",
+          "lat": 40.9720839991175,
+          "lng": 29.2001740000103,
+          "trafficFactor": 3.0734966592427613
         },
         {
-          "name": "SEVBAN MEHMET CADDESİ",
-          "lat": 41.2081150005869,
-          "lng": 28.7327939999782,
-          "trafficFactor": 0.5633744289599161
+          "name": "DAVUTPAŞA",
+          "lat": 41.0040240005543,
+          "lng": 28.9442709999882,
+          "trafficFactor": 2.6210826210826212
         },
         {
-          "name": "ŞERİF AĞA",
-          "lat": 41.0972543820986,
-          "lng": 28.0021162614193,
-          "trafficFactor": 0.7427653651669053
+          "name": "SU DEPOSU",
+          "lat": 41.0681410005644,
+          "lng": 28.7532329999801,
+          "trafficFactor": 1.1488277268093783
         },
         {
-          "name": "ÇATALCA DEVLET HASTANESİ ACİL GİRİŞİ",
-          "lat": 41.1356651078862,
-          "lng": 28.4656043141045,
+          "name": "BORSA İSTANBUL MESLEKİ VE TEKNİK ANADOLU LİSESİ",
+          "lat": 41.0869570005674,
+          "lng": 28.8052429999828,
           "trafficFactor": 0.0
         }
       ]
     },
     {
       "Model": "Stacking Meta-Model",
-      "Accuracy": 94.73684210526315,
-      "Precision": 75.0,
+      "Accuracy": 93.85964912280701,
+      "Precision": 66.66666666666666,
       "Recall": 60.0,
-      "F1 Skoru": 66.66666666666666,
-      "ROC-AUC": 84.08653846153847,
-      "Confidence": 70.90573114505875,
-      "Duration": 396.593799181804,
-      "Distance": 301.19980000000004,
+      "F1 Skoru": 63.1578947368421,
+      "ROC-AUC": 92.5,
+      "Confidence": 71.94474148528069,
+      "Duration": 997.3033625931045,
+      "Distance": 491.1241999999999,
       "RouteCoords": [
         {
-          "name": "BEZMİALEM VAKIF ÜNİVERSİTESİ",
-          "lat": 41.020832000557,
-          "lng": 28.9342369999879,
-          "trafficFactor": 0.038026115123186266
+          "name": "SAĞLIK OCAĞI CADDESİ",
+          "lat": 41.2545515058788,
+          "lng": 28.3615429619885,
+          "trafficFactor": 0.7137323943661975
         },
         {
-          "name": "GÖĞÜS HASTANESİ",
-          "lat": 41.0002834089139,
-          "lng": 28.9165884776912,
-          "trafficFactor": 0.023184924793301143
+          "name": "ÇAMLIKTEPE",
+          "lat": 41.2318519991116,
+          "lng": 28.7010590000065,
+          "trafficFactor": 1.7119155354449473
         },
         {
-          "name": "ŞEHİT EROL OLÇOK",
-          "lat": 41.0213840005572,
-          "lng": 29.0419569999904,
-          "trafficFactor": 0.16183714048995668
+          "name": "YAVUZ SOKAK",
+          "lat": 41.1894580005839,
+          "lng": 28.7073779999766,
+          "trafficFactor": 0.9068728522336771
         },
         {
-          "name": "NEVZAT AYAZ ANADOLU LİSESİ",
-          "lat": 41.0305569600878,
-          "lng": 29.1050839603896,
-          "trafficFactor": 1.126306601687246
+          "name": "YENİ MAHALLE",
+          "lat": 41.0541220005623,
+          "lng": 28.9200109999874,
+          "trafficFactor": 0.42928039702233245
         },
         {
-          "name": "ŞEHİT ASKERİ ÇOBAN",
-          "lat": 41.0487400005617,
-          "lng": 29.1030369999914,
-          "trafficFactor": 0.0349079036037388
+          "name": "AHESTE SOKAK",
+          "lat": 41.0229330005575,
+          "lng": 29.1222169999918,
+          "trafficFactor": 2.228245363766049
         },
         {
-          "name": "SELÇUKLAR CAMİİ",
-          "lat": 40.9782920005503,
-          "lng": 29.1141739999917,
-          "trafficFactor": 0.9526404763014658
+          "name": "KISIKLI",
+          "lat": 41.0220920005574,
+          "lng": 29.0629999999908,
+          "trafficFactor": 2.0703735881841876
         },
         {
-          "name": "AŞIK MAHSUNİ ŞERİF CADDESİ",
-          "lat": 40.9976309991169,
-          "lng": 29.1870010000103,
-          "trafficFactor": 0.5064227571054419
+          "name": "MİLLET BAHÇESİ",
+          "lat": 41.0242130005574,
+          "lng": 29.0521619999903,
+          "trafficFactor": 1.3060975609756098
         },
         {
-          "name": "VİLLALAR",
-          "lat": 41.088738999115,
-          "lng": 29.3264570000089,
-          "trafficFactor": 0.44038776639674004
+          "name": "HOŞSOHBET SOKAK",
+          "lat": 41.0623000005637,
+          "lng": 29.0087349999896,
+          "trafficFactor": 2.1476923076923073
         },
         {
-          "name": "BİLGİ SOKAK",
-          "lat": 41.0930880443516,
-          "lng": 29.0325950309239,
-          "trafficFactor": 0.8328012173991934
+          "name": "4.LEVENT",
+          "lat": 41.0857950005676,
+          "lng": 29.0076379999895,
+          "trafficFactor": 1.4996400287976965
         },
         {
-          "name": "BLOKLAR- ŞEHİT MEHMET CİVAK",
-          "lat": 41.1220159650117,
-          "lng": 28.9994669645928,
-          "trafficFactor": 0.07721812687498403
+          "name": "SARIYER HAMİDİYE ETFAL EĞİTİM VE ARAŞTIRMA HASTANESİ",
+          "lat": 41.1556169991135,
+          "lng": 29.0267880000116,
+          "trafficFactor": 0.9375
         },
         {
-          "name": "SÜNNET KÖPRÜSÜ",
-          "lat": 41.0635170005639,
-          "lng": 28.9510299999882,
-          "trafficFactor": 0.024881743391784228
+          "name": "BİZİMTEPE ",
+          "lat": 41.2203119961708,
+          "lng": 29.1036700385189,
+          "trafficFactor": 1.038242200603824
         },
         {
-          "name": "ESENKENT PARK",
-          "lat": 41.0608999991152,
-          "lng": 28.6693000000048,
-          "trafficFactor": 0.5515737045891502
+          "name": "BEYKENT",
+          "lat": 41.0193465787747,
+          "lng": 28.631458944095,
+          "trafficFactor": 2.394911504424779
         },
         {
-          "name": "AYDIN",
-          "lat": 41.0336980005586,
-          "lng": 28.6743659999746,
-          "trafficFactor": 0.583015934534223
+          "name": "GÜRPINAR CADDESİ",
+          "lat": 40.9964460005525,
+          "lng": 28.6059249999683,
+          "trafficFactor": 0.42384887839433283
         },
         {
-          "name": "FEVZİ ÇAKMAK CADDESİ",
-          "lat": 40.9984380005531,
-          "lng": 28.7165869999779,
-          "trafficFactor": 0.23399178050430397
+          "name": "KARABEYLİ SAPAĞI",
+          "lat": 41.0946530005692,
+          "lng": 29.7344639999977,
+          "trafficFactor": 0.8284431137724553
         },
         {
-          "name": "SU TERAZİSİ",
-          "lat": 41.0029450005539,
-          "lng": 28.7784149999817,
-          "trafficFactor": 0.43462717937065204
+          "name": "ŞİFA SONDURAK",
+          "lat": 40.8276519991206,
+          "lng": 29.3650080000083,
+          "trafficFactor": 1.0739436619718314
         },
         {
-          "name": "LİLYUM SOKAK",
-          "lat": 41.0736702937127,
-          "lng": 28.7123323385955,
-          "trafficFactor": 0.4880995472389016
+          "name": "TUNA CADDESİ",
+          "lat": 40.9776540005503,
+          "lng": 29.2228529999932,
+          "trafficFactor": 2.441944847605225
         },
         {
-          "name": "ŞEHİT TAHSİN GEREKLİ",
-          "lat": 41.0641270005636,
-          "lng": 28.7143569999776,
-          "trafficFactor": 0.06900396303262912
+          "name": "MİRALAY ÇIKMAZI",
+          "lat": 40.9720839991175,
+          "lng": 29.2001740000103,
+          "trafficFactor": 3.0734966592427613
         },
         {
-          "name": "SEVBAN MEHMET CADDESİ",
-          "lat": 41.2081150005869,
-          "lng": 28.7327939999782,
-          "trafficFactor": 0.5069927352773037
+          "name": "DAVUTPAŞA",
+          "lat": 41.0040240005543,
+          "lng": 28.9442709999882,
+          "trafficFactor": 2.6210826210826212
         },
         {
-          "name": "ÇATALCA DEVLET HASTANESİ ACİL GİRİŞİ",
-          "lat": 41.1356651078862,
-          "lng": 28.4656043141045,
-          "trafficFactor": 0.43821697280282723
+          "name": "SU DEPOSU",
+          "lat": 41.0681410005644,
+          "lng": 28.7532329999801,
+          "trafficFactor": 1.1488277268093783
         },
         {
-          "name": "ŞERİF AĞA",
-          "lat": 41.0972543820986,
-          "lng": 28.0021162614193,
+          "name": "BORSA İSTANBUL MESLEKİ VE TEKNİK ANADOLU LİSESİ",
+          "lat": 41.0869570005674,
+          "lng": 28.8052429999828,
           "trafficFactor": 0.0
         }
       ]
