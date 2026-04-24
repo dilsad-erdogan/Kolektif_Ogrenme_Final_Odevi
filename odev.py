@@ -106,7 +106,8 @@ def main():
         filtrelenmis_veriler.append({
             'Durak_Adi': durak_adi,
             'Longitude': longitude_val,
-            'Latitude': latitude_val
+            'Latitude': latitude_val,
+            'ILCEID': ilce_id
         })
 
     df_filtered = pd.DataFrame(filtrelenmis_veriler)
@@ -129,18 +130,31 @@ def main():
     
     time.sleep(2)
     print("\n" + "="*50)
-    print(" 3. AŞAMA: RASTGELE ÖRNEKLEM SEÇİMİ (20 DURAK) ")
-    print("="*50)
+    # Uygun ilçeleri belirle (En az 20 durağı olan ve Adalar olmayanlar)
+    ilce_sayilari = df_filtered['ILCEID'].value_counts()
+    uygun_ilceler = ilce_sayilari[ilce_sayilari >= 20].index.tolist()
+    
+    if not uygun_ilceler:
+        print("[!] Hata: 20'den fazla durağı olan uygun bir ilçe bulunamadı!")
+        return
 
-    # (Sunumlarda kod her çalıştığında aynı durağı versin ki sürpriz olmasın diye random_state=200 ayarlıyoruz - Yeni Senaryo)
-    df_sampled = df_filtered.sample(n=20, random_state=200)
+    # Rastgele bir ilçe seçelim (Her çalışmada farklı ilçe gelsin diyorsanız random_state'i kaldırabilirsiniz)
+    # Ancak sunum kararlılığı için şimdilik sabit bir random seed ile seçiyoruz.
+    np.random.seed(int(time.time()) % 1000) # Her seferinde farklı gelsin diye zamanı baz alalım
+    secilen_ilce = np.random.choice(uygun_ilceler)
+    
+    print(f"[-] Rastgele Seçilen İlçe ID: {secilen_ilce} (Bu ilçede toplam {ilce_sayilari[secilen_ilce]} durak var)")
 
-    print("[-] Temizlenmiş veri seti içinden rastgele 20 durak seçildi.")
+    # Seçilen ilçeden 20 durak örnekle
+    df_district = df_filtered[df_filtered['ILCEID'] == secilen_ilce]
+    df_sampled = df_district.sample(n=20, random_state=42)
+
+    print(f"[-] {secilen_ilce} ID'li ilçe içinden rastgele 20 durak seçildi.")
 
     # Sadece seçilen 20 satırı kaydet
     kayit_yolu = 'secilmis_veriler.csv'
     df_sampled.to_csv(kayit_yolu, index=False, encoding='utf-8')
-    print(f"\n[-] Sadece rastgele seçilen 20 durak '{kayit_yolu}' adıyla başarıyla kaydedildi.")
+    print(f"\n[-] Seçilen 20 durak '{kayit_yolu}' adıyla başarıyla kaydedildi.")
 
     time.sleep(2)
     print("\n" + "="*50)
