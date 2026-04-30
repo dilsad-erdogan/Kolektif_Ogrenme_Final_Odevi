@@ -50,7 +50,7 @@ function clearRoutes() {
     routeMarkers = [];
 }
 
-function animateRoute(coordsArray, routeStops = []) {
+function animateRoute(coordsArray, routeStops = [], routeColor = "#38bdf8") {
     if(!coordsArray || coordsArray.length === 0) return;
 
     const latlngs = coordsArray.map(c => [c.lat, c.lng]);
@@ -85,7 +85,7 @@ function animateRoute(coordsArray, routeStops = []) {
             delay: 600,
             dashArray: [15, 30],
             weight: 6,
-            color: "#38bdf8",
+            color: routeColor,
             pulseColor: "#ffffff",
             paused: false
         }).addTo(map);
@@ -133,7 +133,8 @@ function updateUI(modelData) {
 
 async function selectModel(index) {
     if(!presentationData || !presentationData.models) return;
-    const names = ['Random Forest', 'XGBoost', 'Stacking Meta-Model'];
+    const names = ['Random Forest', 'XGBoost', 'Stacking Meta-Model', 'Ant Colony Opt.'];
+    const colors = ['#22c55e', '#f97316', '#a855f7', '#ef4444'];
     const modelData = presentationData.models.find(m => m.Model === names[index]);
 
     if(!modelData) return;
@@ -152,12 +153,12 @@ async function selectModel(index) {
             const osrmCoords = data.routes[0].geometry.coordinates.map(c => ({lat: c[1], lng: c[0]}));
             osrmCoords[0].name = modelData.RouteCoords[0].name;
             osrmCoords[osrmCoords.length - 1].name = modelData.RouteCoords[modelData.RouteCoords.length - 1].name;
-            animateRoute(osrmCoords, modelData.RouteCoords);
+            animateRoute(osrmCoords, modelData.RouteCoords, colors[index]);
         } else {
-            animateRoute(modelData.RouteCoords, modelData.RouteCoords);
+            animateRoute(modelData.RouteCoords, modelData.RouteCoords, colors[index]);
         }
     } catch(err) {
-        animateRoute(modelData.RouteCoords, modelData.RouteCoords);
+        animateRoute(modelData.RouteCoords, modelData.RouteCoords, colors[index]);
     }
 }
 

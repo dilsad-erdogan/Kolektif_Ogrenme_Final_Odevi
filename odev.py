@@ -15,6 +15,108 @@ from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 import warnings
 
+class ACOModelWrapper:
+    def __init__(self, df_edges, n_durak, durak_isimleri, maliyet_matrisi):
+        self.df_edges = df_edges
+        self.n_durak = n_durak
+        self.durak_isimleri = durak_isimleri
+        self.maliyet_matrisi = maliyet_matrisi
+        self.pheromones_norm = np.zeros((n_durak, n_durak))
+        self.edge_preds = np.zeros((n_durak, n_durak))
+        self.name_to_idx = {name: idx for idx, name in enumerate(durak_isimleri)}
+        
+    def fit(self, X=None, y=None):
+        num_ants = 20
+        num_iterations = 50
+        alpha = 1.0
+        beta = 2.0
+        evaporation = 0.5
+        
+        m_matrix = self.maliyet_matrisi.values
+        pheromones = np.ones((self.n_durak, self.n_durak))
+        
+        heuristic = np.zeros_like(m_matrix)
+        for i in range(self.n_durak):
+            for j in range(self.n_durak):
+                if i != j and m_matrix[i, j] > 0:
+                    heuristic[i, j] = 1.0 / m_matrix[i, j]
+                    
+        best_route = []
+        best_dist = float('inf')
+        
+        for it in range(num_iterations):
+            paths = []
+            path_lengths = []
+            
+            for ant in range(num_ants):
+                start = np.random.randint(self.n_durak)
+                path = [start]
+                unvisited = set(range(self.n_durak))
+                unvisited.remove(start)
+                
+                curr = start
+                dist = 0.0
+                while unvisited:
+                    probs = []
+                    candidates = list(unvisited)
+                    for cand in candidates:
+                        p = (pheromones[curr, cand] ** alpha) * (heuristic[curr, cand] ** beta)
+                        probs.append(p)
+                        
+                    sum_probs = sum(probs)
+                    if sum_probs == 0:
+                        probs = [1.0/len(probs)] * len(probs)
+                    else:
+                        probs = [p / sum_probs for p in probs]
+                        
+                    next_node = np.random.choice(candidates, p=probs)
+                    path.append(next_node)
+                    dist += m_matrix[curr, next_node]
+                    unvisited.remove(next_node)
+                    curr = next_node
+                    
+                paths.append(path)
+                path_lengths.append(dist)
+                
+                if dist < best_dist:
+                    best_dist = dist
+                    best_route = path
+                    
+            pheromones *= (1 - evaporation)
+            for p, d in zip(paths, path_lengths):
+                for i in range(len(p) - 1):
+                    pheromones[p[i], p[i+1]] += 1.0 / d
+                    
+        max_p = pheromones.max()
+        if max_p > 0:
+            self.pheromones_norm = pheromones / max_p
+        else:
+            self.pheromones_norm = pheromones
+            
+        for i in range(len(best_route) - 1):
+            self.edge_preds[best_route[i], best_route[i+1]] = 1
+            
+    def _get_node_indices(self, idx):
+        row = self.df_edges.loc[idx]
+        o = self.name_to_idx[row['Origin_Node']]
+        d = self.name_to_idx[row['Dest_Node']]
+        return o, d
+
+    def predict(self, X):
+        preds = []
+        for idx in X.index:
+            o, d = self._get_node_indices(idx)
+            preds.append(self.edge_preds[o, d])
+        return np.array(preds)
+        
+    def predict_proba(self, X):
+        probs = []
+        for idx in X.index:
+            o, d = self._get_node_indices(idx)
+            probs.append(self.pheromones_norm[o, d])
+        probs = np.clip(probs, 0, 1)
+        return np.column_stack((1 - probs, probs))
+
 def haversine(lon1, lat1, lon2, lat2):
     """İki koordinat (boylam, enlem) arasındaki mesafeyi kilometre cinsinden hesaplar."""
     R = 6371.0 # Dünya'nın yarıçapı (km)
@@ -490,7 +592,7 @@ def main():
             plt.annotate(kisa_adi, (row['Longitude'], row['Latitude']), 
                          xytext=(5, 5), textcoords='offset points', fontsize=8, zorder=6)
                          
-        c_color = 'green' if 'Random Forest' in model_name else ('orange' if 'XGBoost' in model_name else 'purple')
+        c_color = 'green' if 'Random Forest' in model_name else ('orange' if 'XGBoost' in model_name else ('purple' if 'Stacking' in model_name else 'red'))
         
         # Tahmin edilen en iyi rotayı sırayla ardışık şekilde çiz
         for i_idx in range(len(best_overall_route) - 1):
@@ -522,7 +624,8 @@ def main():
         # Model ismine göre grafiği kaydet
         if 'Random Forest' in model_name: g_name = 'rf_continuous_route.png'
         elif 'XGBoost' in model_name: g_name = 'xgb_continuous_route.png'
-        else: g_name = 'stack_continuous_route.png'
+        elif 'Stacking' in model_name: g_name = 'stack_continuous_route.png'
+        else: g_name = 'aco_continuous_route.png'
         
         plt.savefig(g_name, dpi=300, bbox_inches='tight')
         plt.close()
@@ -630,34 +733,55 @@ def main():
     except Exception as e:
         print(f"[-] Stacking aşamasında bir hata oluştu: {e}")
 
+    time.sleep(5)
+    print("\n" + "="*50)
+    print(" 10. AŞAMA: ANT COLONY OPTIMIZATION (ACO) İLE ROTA ÇİZİMİ ")
+    print("="*50)
+
+    try:
+        print("[-] Karınca Kolonisi (ACO) algoritması gerçek maliyet matrisi üzerinden eğitiliyor...")
+        aco_model = ACOModelWrapper(df_edges, n, durak_isimleri, maliyet_matrisi)
+        aco_model.fit()
+        m_aco = rota_insa_et_ve_ciz('Ant Colony Opt.', aco_model, df_edges, X_test, y_test, X_tamami, n, durak_isimleri, mesafe_matrisi, df_sampled)
+        if m_aco: tum_metrikler.append(m_aco)
+    except Exception as e:
+        print(f"[-] ACO aşamasında bir hata oluştu: {e}")
+
     time.sleep(2)
     print("\n" + "="*50)
-    print(" 10. AŞAMA: MODELLERİN PERFORMANS KIYASLAMA GRAFİĞİ ")
+    print(" 11. AŞAMA: MODELLERİN PERFORMANS KIYASLAMA GRAFİĞİ ")
     print("="*50)
     
     if len(tum_metrikler) > 0:
         df_metrics = pd.DataFrame(tum_metrikler)
-        metric_cols = ['Accuracy', 'Precision', 'Recall', 'F1 Skoru', 'ROC-AUC']
+        metric_cols = ['Duration', 'Distance']
+        plot_labels = ['Toplam Süre (dk)', 'Toplam Mesafe (km)']
         
         fig, ax = plt.subplots(figsize=(10, 6))
         n_models = len(df_metrics)
         width = 0.15
         x = np.arange(len(metric_cols))
-        colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
+        colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
         
         for i, row in df_metrics.iterrows():
             bar_positions = x + (i * width) - (width * (n_models - 1) / 2)
             metrik_degerleri = [row[col] for col in metric_cols]
-            ax.bar(bar_positions, metrik_degerleri, width, label=row['Model'], color=colors[i % len(colors)])
+            bars = ax.bar(bar_positions, metrik_degerleri, width, label=row['Model'], color=colors[i % len(colors)])
+            
+            # Değerleri barların üzerine yazdıralım
+            for bar in bars:
+                yval = bar.get_height()
+                ax.text(bar.get_x() + bar.get_width()/2, yval + 1, f'{yval:.1f}', ha='center', va='bottom', fontsize=9, rotation=0)
                    
-        ax.set_ylabel('Yüzde (%)', fontsize=12)
-        ax.set_title('Test Verisi Üzerinde Modellerin Sınıflandırma Performansı Karşılaştırması', fontsize=14)
+        ax.set_ylabel('Değer (dk / km)', fontsize=12)
+        ax.set_title('Modellerin Nihai Rota Optimizasyon Performansı (Süre ve Mesafe)', fontsize=14)
         ax.set_xticks(x)
-        ax.set_xticklabels(metric_cols, fontsize=11)
+        ax.set_xticklabels(plot_labels, fontsize=12)
         ax.legend(title='Algoritmalar')
         
-        plt.ylim(0, 105)
         plt.grid(axis='y', linestyle='--', alpha=0.7)
+        max_val = df_metrics[metric_cols].max().max()
+        plt.ylim(0, max_val * 1.2)
         
         karsilastirma_gorsel_yolu = 'modellerin_kiyaslamasi.png'
         plt.savefig(karsilastirma_gorsel_yolu, dpi=300, bbox_inches='tight')

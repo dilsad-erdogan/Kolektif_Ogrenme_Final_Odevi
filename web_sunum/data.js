@@ -1,522 +1,655 @@
 const presentationData = {
   "allStops": [
     {
-      "Durak_Adi": "ATAŞEHİR  BELEDİYESİ",
-      "Longitude": 29.1022610480026,
-      "Latitude": 40.9978340219462,
-      "ILCEID": "2049"
+      "Durak_Adi": "ÇAMÇEŞME PARKI",
+      "Longitude": 29.2726879999939,
+      "Latitude": 40.8794300005348,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "FATİN RÜŞTÜ ZORLU CADDESİ",
-      "Longitude": 29.0876980311293,
-      "Latitude": 41.0063020440966,
-      "ILCEID": "2049"
+      "Durak_Adi": "GÜZELYALI",
+      "Longitude": 29.2827489999941,
+      "Latitude": 40.8608080005318,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "ATAŞEHİR PLAZALAR",
-      "Longitude": 29.1231099999919,
-      "Latitude": 40.9930850005527,
-      "ILCEID": "2049"
+      "Durak_Adi": "PENDİK YHT İSTASYONU",
+      "Longitude": 29.2306260000099,
+      "Latitude": 40.8807679991194,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "10. SOKAK",
-      "Longitude": 29.1724539999925,
-      "Latitude": 40.9866420005518,
-      "ILCEID": "2049"
+      "Durak_Adi": "PAPATYA SİTESİ",
+      "Longitude": 29.2702329999938,
+      "Latitude": 40.9232250005417,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "ESATPAŞA MAHALLESİ",
-      "Longitude": 29.0869040424354,
-      "Latitude": 40.9989140158491,
-      "ILCEID": "2049"
+      "Durak_Adi": "KÜME EVLERİ",
+      "Longitude": 29.3042370364774,
+      "Latitude": 40.9245339687763,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "KELKİT SOKAK",
-      "Longitude": 29.0954619999914,
-      "Latitude": 40.9974820005535,
-      "ILCEID": "2049"
+      "Durak_Adi": "KARADENİZ CADDESİ",
+      "Longitude": 29.4625804626422,
+      "Latitude": 40.9675162107438,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "ÜSKÜDAR CADDESİ",
-      "Longitude": 29.1656109999925,
-      "Latitude": 40.9824190005511,
-      "ILCEID": "2049"
+      "Durak_Adi": "TOKİ KONUTLARI",
+      "Longitude": 29.2784639999939,
+      "Latitude": 40.9081600005393,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "FATİH CADDESİ",
-      "Longitude": 29.1816959999927,
-      "Latitude": 40.9849240005514,
-      "ILCEID": "2049"
+      "Durak_Adi": "MİSAKI MİLLİ CADDESİ",
+      "Longitude": 29.2727089999939,
+      "Latitude": 40.8752460005341,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "HABİRE YAHŞİ ANADOLU LİSESİ",
-      "Longitude": 29.0958449000112,
-      "Latitude": 40.9867627991172,
-      "ILCEID": "2049"
+      "Durak_Adi": "CAHİT ZARİFOĞLU CADDESİ",
+      "Longitude": 29.2788759999939,
+      "Latitude": 40.9304640005429,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "FETİH MAHALLESİ MUHTARLIĞI",
-      "Longitude": 29.0743999857268,
-      "Latitude": 41.0054000053432,
-      "ILCEID": "2049"
+      "Durak_Adi": "ŞEYHLİ YOLU",
+      "Longitude": 29.285795999994,
+      "Latitude": 40.9007320005381,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "49.SOKAK",
-      "Longitude": 29.1862330000099,
-      "Latitude": 40.9801489991167,
-      "ILCEID": "2049"
+      "Durak_Adi": "TERSANE YOLU",
+      "Longitude": 29.2721650000094,
+      "Latitude": 40.8643589991198,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "ALİ FUAT CEBESOY İLKOKULU",
-      "Longitude": 29.0858149999913,
-      "Latitude": 40.9938050005528,
-      "ILCEID": "2049"
+      "Durak_Adi": "ÜÇEVLER",
+      "Longitude": 29.2519389999937,
+      "Latitude": 40.8965570005375,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "MESKENLER",
-      "Longitude": 29.1179819999918,
-      "Latitude": 40.9786210005505,
-      "ILCEID": "2049"
+      "Durak_Adi": "İNSAF SOKAK",
+      "Longitude": 29.3042919666611,
+      "Latitude": 40.874390973467,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "RABİA LEMAN İMAM HATİP ORTAOKULU",
-      "Longitude": 29.0983269999915,
-      "Latitude": 40.988643000552,
-      "ILCEID": "2049"
+      "Durak_Adi": "ÇEŞME",
+      "Longitude": 29.3059325422939,
+      "Latitude": 40.9588707030268,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "GÖZTEPE KÖPRÜSÜ",
-      "Longitude": 29.0739209664146,
-      "Latitude": 40.9934880163348,
-      "ILCEID": "2049"
+      "Durak_Adi": "BARBAROS HAYRETTİNPAŞA CADDESİ",
+      "Longitude": 29.2686719999938,
+      "Latitude": 40.9044130005387,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "AKYAZI CADDESİ",
-      "Longitude": 29.1432409999922,
-      "Latitude": 40.9841380005514,
-      "ILCEID": "2049"
+      "Durak_Adi": "TEKNOPARK İSTANBUL",
+      "Longitude": 29.3121599999943,
+      "Latitude": 40.9188180005411,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "LİBADİYE CADDESİ",
-      "Longitude": 29.0740699951829,
-      "Latitude": 40.9947760263627,
-      "ILCEID": "2049"
+      "Durak_Adi": "ÇAMÇEŞME MUHTARLIĞI",
+      "Longitude": 29.2724899999939,
+      "Latitude": 40.8733180005338,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "İÇERENKÖY DÖRTYOL",
-      "Longitude": 29.1177739999918,
-      "Latitude": 40.9709930005493,
-      "ILCEID": "2049"
+      "Durak_Adi": "UHUD SOKAK",
+      "Longitude": 29.2637859999937,
+      "Latitude": 40.9229080005417,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "HZ.HÜSEYİN CAMİİ",
-      "Longitude": 29.0905029999913,
-      "Latitude": 40.9999290005538,
-      "ILCEID": "2049"
+      "Durak_Adi": "MESLEK LİSESİ",
+      "Longitude": 29.2735410000094,
+      "Latitude": 40.901673999119,
+      "ILCEID": "1835"
     },
     {
-      "Durak_Adi": "ADALET SİTESİ",
-      "Longitude": 29.1026209999916,
-      "Latitude": 40.9909010005524,
-      "ILCEID": "2049"
+      "Durak_Adi": "ORMAN CADDESİ",
+      "Longitude": 29.2529989999936,
+      "Latitude": 40.9258640005421,
+      "ILCEID": "1835"
     }
   ],
   "models": [
     {
       "Model": "Random Forest",
-      "Accuracy": 92.98245614035088,
-      "Precision": 54.54545454545454,
-      "Recall": 66.66666666666666,
-      "F1 Skoru": 60.0,
-      "ROC-AUC": 96.19047619047619,
-      "Confidence": 80.19669448194092,
-      "Duration": 133.91690887499803,
-      "Distance": 31.303900000000006,
+      "Accuracy": 93.85964912280701,
+      "Precision": 61.53846153846154,
+      "Recall": 80.0,
+      "F1 Skoru": 69.56521739130434,
+      "ROC-AUC": 94.08653846153847,
+      "Confidence": 78.12077655243395,
+      "Duration": 209.7371770314864,
+      "Distance": 69.06290000000001,
       "RouteCoords": [
         {
-          "name": "GÖZTEPE KÖPRÜSÜ",
-          "lat": 40.9934880163348,
-          "lng": 29.0739209664146,
-          "trafficFactor": 2.7483660130718954
+          "name": "PENDİK YHT İSTASYONU",
+          "lat": 40.8807679991194,
+          "lng": 29.2306260000099,
+          "trafficFactor": 1.8648275862068968
         },
         {
-          "name": "LİBADİYE CADDESİ",
-          "lat": 40.9947760263627,
-          "lng": 29.0740699951829,
-          "trafficFactor": 2.234184239733629
+          "name": "ÜÇEVLER",
+          "lat": 40.8965570005375,
+          "lng": 29.2519389999937,
+          "trafficFactor": 1.7611336032388665
         },
         {
-          "name": "FETİH MAHALLESİ MUHTARLIĞI",
-          "lat": 41.0054000053432,
-          "lng": 29.0743999857268,
-          "trafficFactor": 2.119496855345912
+          "name": "MESLEK LİSESİ",
+          "lat": 40.901673999119,
+          "lng": 29.2735410000094,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "FATİN RÜŞTÜ ZORLU CADDESİ",
-          "lat": 41.0063020440966,
-          "lng": 29.0876980311293,
-          "trafficFactor": 2.119496855345912
+          "name": "TOKİ KONUTLARI",
+          "lat": 40.9081600005393,
+          "lng": 29.2784639999939,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "ESATPAŞA MAHALLESİ",
-          "lat": 40.9989140158491,
-          "lng": 29.0869040424354,
-          "trafficFactor": 2.265578635014837
+          "name": "BARBAROS HAYRETTİNPAŞA CADDESİ",
+          "lat": 40.9044130005387,
+          "lng": 29.2686719999938,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "ALİ FUAT CEBESOY İLKOKULU",
-          "lat": 40.9938050005528,
-          "lng": 29.0858149999913,
-          "trafficFactor": 2.265578635014837
+          "name": "UHUD SOKAK",
+          "lat": 40.9229080005417,
+          "lng": 29.2637859999937,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "HZ.HÜSEYİN CAMİİ",
-          "lat": 40.9999290005538,
-          "lng": 29.0905029999913,
-          "trafficFactor": 2.7925531914893615
+          "name": "ORMAN CADDESİ",
+          "lat": 40.9258640005421,
+          "lng": 29.2529989999936,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "KELKİT SOKAK",
-          "lat": 40.9974820005535,
-          "lng": 29.0954619999914,
-          "trafficFactor": 1.6539833531510104
+          "name": "PAPATYA SİTESİ",
+          "lat": 40.9232250005417,
+          "lng": 29.2702329999938,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "ADALET SİTESİ",
-          "lat": 40.9909010005524,
-          "lng": 29.1026209999916,
-          "trafficFactor": 2.08
+          "name": "CAHİT ZARİFOĞLU CADDESİ",
+          "lat": 40.9304640005429,
+          "lng": 29.2788759999939,
+          "trafficFactor": 1.1517925247902365
         },
         {
-          "name": "HABİRE YAHŞİ ANADOLU LİSESİ",
-          "lat": 40.9867627991172,
-          "lng": 29.0958449000112,
-          "trafficFactor": 2.08
+          "name": "ÇEŞME",
+          "lat": 40.9588707030268,
+          "lng": 29.3059325422939,
+          "trafficFactor": 1.135826771653543
         },
         {
-          "name": "RABİA LEMAN İMAM HATİP ORTAOKULU",
-          "lat": 40.988643000552,
-          "lng": 29.0983269999915,
-          "trafficFactor": 1.6539833531510104
+          "name": "TEKNOPARK İSTANBUL",
+          "lat": 40.9188180005411,
+          "lng": 29.3121599999943,
+          "trafficFactor": 0.9455298993487271
         },
         {
-          "name": "ATAŞEHİR  BELEDİYESİ",
-          "lat": 40.9978340219462,
-          "lng": 29.1022610480026,
-          "trafficFactor": 2.6484085862324207
+          "name": "KÜME EVLERİ",
+          "lat": 40.9245339687763,
+          "lng": 29.3042370364774,
+          "trafficFactor": 1.9388379204892967
         },
         {
-          "name": "ATAŞEHİR PLAZALAR",
-          "lat": 40.9930850005527,
-          "lng": 29.1231099999919,
-          "trafficFactor": 2.1678832116788325
+          "name": "ŞEYHLİ YOLU",
+          "lat": 40.9007320005381,
+          "lng": 29.285795999994,
+          "trafficFactor": 1.743879472693032
         },
         {
-          "name": "MESKENLER",
-          "lat": 40.9786210005505,
-          "lng": 29.1179819999918,
-          "trafficFactor": 2.404624277456648
+          "name": "ÇAMÇEŞME PARKI",
+          "lat": 40.8794300005348,
+          "lng": 29.2726879999939,
+          "trafficFactor": 2.935602575896964
         },
         {
-          "name": "İÇERENKÖY DÖRTYOL",
-          "lat": 40.9709930005493,
-          "lng": 29.1177739999918,
-          "trafficFactor": 2.176801801801802
+          "name": "MİSAKI MİLLİ CADDESİ",
+          "lat": 40.8752460005341,
+          "lng": 29.2727089999939,
+          "trafficFactor": 2.935602575896964
         },
         {
-          "name": "AKYAZI CADDESİ",
-          "lat": 40.9841380005514,
-          "lng": 29.1432409999922,
-          "trafficFactor": 2.1805745554035565
+          "name": "ÇAMÇEŞME MUHTARLIĞI",
+          "lat": 40.8733180005338,
+          "lng": 29.2724899999939,
+          "trafficFactor": 2.9204355108877724
         },
         {
-          "name": "10. SOKAK",
-          "lat": 40.9866420005518,
-          "lng": 29.1724539999925,
-          "trafficFactor": 1.2891113892365458
+          "name": "TERSANE YOLU",
+          "lat": 40.8643589991198,
+          "lng": 29.2721650000094,
+          "trafficFactor": 2.3440233236151604
         },
         {
-          "name": "FATİH CADDESİ",
-          "lat": 40.9849240005514,
-          "lng": 29.1816959999927,
-          "trafficFactor": 1.5857011915673693
+          "name": "GÜZELYALI",
+          "lat": 40.8608080005318,
+          "lng": 29.2827489999941,
+          "trafficFactor": 1.5529411764705885
         },
         {
-          "name": "49.SOKAK",
-          "lat": 40.9801489991167,
-          "lng": 29.1862330000099,
-          "trafficFactor": 1.4485488126649075
+          "name": "İNSAF SOKAK",
+          "lat": 40.874390973467,
+          "lng": 29.3042919666611,
+          "trafficFactor": 0.8251727245419043
         },
         {
-          "name": "ÜSKÜDAR CADDESİ",
-          "lat": 40.9824190005511,
-          "lng": 29.1656109999925,
+          "name": "KARADENİZ CADDESİ",
+          "lat": 40.9675162107438,
+          "lng": 29.4625804626422,
           "trafficFactor": 0.0
         }
       ]
     },
     {
       "Model": "XGBoost",
-      "Accuracy": 96.49122807017544,
+      "Accuracy": 95.6140350877193,
       "Precision": 72.72727272727273,
-      "Recall": 88.88888888888889,
-      "F1 Skoru": 80.0,
-      "ROC-AUC": 98.51851851851852,
-      "Confidence": 88.26725769042969,
-      "Duration": 124.409752270119,
-      "Distance": 29.730500000000006,
+      "Recall": 80.0,
+      "F1 Skoru": 76.19047619047619,
+      "ROC-AUC": 92.5,
+      "Confidence": 70.87235260009766,
+      "Duration": 214.9425926003595,
+      "Distance": 67.27670000000002,
       "RouteCoords": [
         {
-          "name": "GÖZTEPE KÖPRÜSÜ",
-          "lat": 40.9934880163348,
-          "lng": 29.0739209664146,
-          "trafficFactor": 2.7483660130718954
+          "name": "KARADENİZ CADDESİ",
+          "lat": 40.9675162107438,
+          "lng": 29.4625804626422,
+          "trafficFactor": 0.9244264507422404
         },
         {
-          "name": "LİBADİYE CADDESİ",
-          "lat": 40.9947760263627,
-          "lng": 29.0740699951829,
-          "trafficFactor": 2.234184239733629
+          "name": "TEKNOPARK İSTANBUL",
+          "lat": 40.9188180005411,
+          "lng": 29.3121599999943,
+          "trafficFactor": 0.9455298993487271
         },
         {
-          "name": "FETİH MAHALLESİ MUHTARLIĞI",
-          "lat": 41.0054000053432,
-          "lng": 29.0743999857268,
-          "trafficFactor": 2.119496855345912
+          "name": "KÜME EVLERİ",
+          "lat": 40.9245339687763,
+          "lng": 29.3042370364774,
+          "trafficFactor": 1.715551181102362
         },
         {
-          "name": "FATİN RÜŞTÜ ZORLU CADDESİ",
-          "lat": 41.0063020440966,
-          "lng": 29.0876980311293,
-          "trafficFactor": 2.119496855345912
+          "name": "ÇEŞME",
+          "lat": 40.9588707030268,
+          "lng": 29.3059325422939,
+          "trafficFactor": 1.1517925247902365
         },
         {
-          "name": "ESATPAŞA MAHALLESİ",
-          "lat": 40.9989140158491,
-          "lng": 29.0869040424354,
-          "trafficFactor": 2.265578635014837
+          "name": "CAHİT ZARİFOĞLU CADDESİ",
+          "lat": 40.9304640005429,
+          "lng": 29.2788759999939,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "ALİ FUAT CEBESOY İLKOKULU",
-          "lat": 40.9938050005528,
-          "lng": 29.0858149999913,
-          "trafficFactor": 2.265578635014837
+          "name": "UHUD SOKAK",
+          "lat": 40.9229080005417,
+          "lng": 29.2637859999937,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "HZ.HÜSEYİN CAMİİ",
-          "lat": 40.9999290005538,
-          "lng": 29.0905029999913,
-          "trafficFactor": 2.7925531914893615
+          "name": "ORMAN CADDESİ",
+          "lat": 40.9258640005421,
+          "lng": 29.2529989999936,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "KELKİT SOKAK",
-          "lat": 40.9974820005535,
-          "lng": 29.0954619999914,
-          "trafficFactor": 1.6539833531510104
+          "name": "PAPATYA SİTESİ",
+          "lat": 40.9232250005417,
+          "lng": 29.2702329999938,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "ADALET SİTESİ",
-          "lat": 40.9909010005524,
-          "lng": 29.1026209999916,
-          "trafficFactor": 2.08
+          "name": "TOKİ KONUTLARI",
+          "lat": 40.9081600005393,
+          "lng": 29.2784639999939,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "HABİRE YAHŞİ ANADOLU LİSESİ",
-          "lat": 40.9867627991172,
-          "lng": 29.0958449000112,
-          "trafficFactor": 2.08
+          "name": "MESLEK LİSESİ",
+          "lat": 40.901673999119,
+          "lng": 29.2735410000094,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "RABİA LEMAN İMAM HATİP ORTAOKULU",
-          "lat": 40.988643000552,
-          "lng": 29.0983269999915,
-          "trafficFactor": 1.6539833531510104
+          "name": "BARBAROS HAYRETTİNPAŞA CADDESİ",
+          "lat": 40.9044130005387,
+          "lng": 29.2686719999938,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "ATAŞEHİR  BELEDİYESİ",
-          "lat": 40.9978340219462,
-          "lng": 29.1022610480026,
-          "trafficFactor": 2.6484085862324207
+          "name": "ŞEYHLİ YOLU",
+          "lat": 40.9007320005381,
+          "lng": 29.285795999994,
+          "trafficFactor": 1.743879472693032
         },
         {
-          "name": "ATAŞEHİR PLAZALAR",
-          "lat": 40.9930850005527,
-          "lng": 29.1231099999919,
-          "trafficFactor": 2.1678832116788325
+          "name": "ÇAMÇEŞME PARKI",
+          "lat": 40.8794300005348,
+          "lng": 29.2726879999939,
+          "trafficFactor": 2.935602575896964
         },
         {
-          "name": "MESKENLER",
-          "lat": 40.9786210005505,
-          "lng": 29.1179819999918,
-          "trafficFactor": 2.404624277456648
+          "name": "MİSAKI MİLLİ CADDESİ",
+          "lat": 40.8752460005341,
+          "lng": 29.2727089999939,
+          "trafficFactor": 2.935602575896964
         },
         {
-          "name": "İÇERENKÖY DÖRTYOL",
-          "lat": 40.9709930005493,
-          "lng": 29.1177739999918,
-          "trafficFactor": 2.176801801801802
+          "name": "ÇAMÇEŞME MUHTARLIĞI",
+          "lat": 40.8733180005338,
+          "lng": 29.2724899999939,
+          "trafficFactor": 2.9204355108877724
         },
         {
-          "name": "AKYAZI CADDESİ",
-          "lat": 40.9841380005514,
-          "lng": 29.1432409999922,
-          "trafficFactor": 1.5435897435897439
+          "name": "TERSANE YOLU",
+          "lat": 40.8643589991198,
+          "lng": 29.2721650000094,
+          "trafficFactor": 2.3440233236151604
         },
         {
-          "name": "ÜSKÜDAR CADDESİ",
-          "lat": 40.9824190005511,
-          "lng": 29.1656109999925,
-          "trafficFactor": 1.2891113892365458
+          "name": "GÜZELYALI",
+          "lat": 40.8608080005318,
+          "lng": 29.2827489999941,
+          "trafficFactor": 1.5529411764705885
         },
         {
-          "name": "10. SOKAK",
-          "lat": 40.9866420005518,
-          "lng": 29.1724539999925,
-          "trafficFactor": 1.2891113892365458
+          "name": "İNSAF SOKAK",
+          "lat": 40.874390973467,
+          "lng": 29.3042919666611,
+          "trafficFactor": 2.4940677966101696
         },
         {
-          "name": "FATİH CADDESİ",
-          "lat": 40.9849240005514,
-          "lng": 29.1816959999927,
-          "trafficFactor": 1.5857011915673693
+          "name": "PENDİK YHT İSTASYONU",
+          "lat": 40.8807679991194,
+          "lng": 29.2306260000099,
+          "trafficFactor": 1.8648275862068968
         },
         {
-          "name": "49.SOKAK",
-          "lat": 40.9801489991167,
-          "lng": 29.1862330000099,
+          "name": "ÜÇEVLER",
+          "lat": 40.8965570005375,
+          "lng": 29.2519389999937,
           "trafficFactor": 0.0
         }
       ]
     },
     {
       "Model": "Stacking Meta-Model",
-      "Accuracy": 95.6140350877193,
-      "Precision": 70.0,
-      "Recall": 77.77777777777779,
-      "F1 Skoru": 73.68421052631578,
-      "ROC-AUC": 98.09523809523809,
-      "Confidence": 85.00947987689852,
-      "Duration": 124.409752270119,
-      "Distance": 29.730500000000006,
+      "Accuracy": 96.49122807017544,
+      "Precision": 80.0,
+      "Recall": 80.0,
+      "F1 Skoru": 80.0,
+      "ROC-AUC": 94.8076923076923,
+      "Confidence": 70.7990833675861,
+      "Duration": 209.7371770314864,
+      "Distance": 69.06290000000001,
       "RouteCoords": [
         {
-          "name": "GÖZTEPE KÖPRÜSÜ",
-          "lat": 40.9934880163348,
-          "lng": 29.0739209664146,
-          "trafficFactor": 2.7483660130718954
+          "name": "PENDİK YHT İSTASYONU",
+          "lat": 40.8807679991194,
+          "lng": 29.2306260000099,
+          "trafficFactor": 1.8648275862068968
         },
         {
-          "name": "LİBADİYE CADDESİ",
-          "lat": 40.9947760263627,
-          "lng": 29.0740699951829,
-          "trafficFactor": 2.234184239733629
+          "name": "ÜÇEVLER",
+          "lat": 40.8965570005375,
+          "lng": 29.2519389999937,
+          "trafficFactor": 1.7611336032388665
         },
         {
-          "name": "FETİH MAHALLESİ MUHTARLIĞI",
-          "lat": 41.0054000053432,
-          "lng": 29.0743999857268,
-          "trafficFactor": 2.119496855345912
+          "name": "MESLEK LİSESİ",
+          "lat": 40.901673999119,
+          "lng": 29.2735410000094,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "FATİN RÜŞTÜ ZORLU CADDESİ",
-          "lat": 41.0063020440966,
-          "lng": 29.0876980311293,
-          "trafficFactor": 2.119496855345912
+          "name": "TOKİ KONUTLARI",
+          "lat": 40.9081600005393,
+          "lng": 29.2784639999939,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "ESATPAŞA MAHALLESİ",
-          "lat": 40.9989140158491,
-          "lng": 29.0869040424354,
-          "trafficFactor": 2.265578635014837
+          "name": "BARBAROS HAYRETTİNPAŞA CADDESİ",
+          "lat": 40.9044130005387,
+          "lng": 29.2686719999938,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "ALİ FUAT CEBESOY İLKOKULU",
-          "lat": 40.9938050005528,
-          "lng": 29.0858149999913,
-          "trafficFactor": 2.265578635014837
+          "name": "UHUD SOKAK",
+          "lat": 40.9229080005417,
+          "lng": 29.2637859999937,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "HZ.HÜSEYİN CAMİİ",
-          "lat": 40.9999290005538,
-          "lng": 29.0905029999913,
-          "trafficFactor": 2.7925531914893615
+          "name": "ORMAN CADDESİ",
+          "lat": 40.9258640005421,
+          "lng": 29.2529989999936,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "KELKİT SOKAK",
-          "lat": 40.9974820005535,
-          "lng": 29.0954619999914,
-          "trafficFactor": 1.6539833531510104
+          "name": "PAPATYA SİTESİ",
+          "lat": 40.9232250005417,
+          "lng": 29.2702329999938,
+          "trafficFactor": 1.1045003813882532
         },
         {
-          "name": "ADALET SİTESİ",
-          "lat": 40.9909010005524,
-          "lng": 29.1026209999916,
-          "trafficFactor": 2.08
+          "name": "CAHİT ZARİFOĞLU CADDESİ",
+          "lat": 40.9304640005429,
+          "lng": 29.2788759999939,
+          "trafficFactor": 1.1517925247902365
         },
         {
-          "name": "HABİRE YAHŞİ ANADOLU LİSESİ",
-          "lat": 40.9867627991172,
-          "lng": 29.0958449000112,
-          "trafficFactor": 2.08
+          "name": "ÇEŞME",
+          "lat": 40.9588707030268,
+          "lng": 29.3059325422939,
+          "trafficFactor": 1.135826771653543
         },
         {
-          "name": "RABİA LEMAN İMAM HATİP ORTAOKULU",
-          "lat": 40.988643000552,
-          "lng": 29.0983269999915,
-          "trafficFactor": 1.6539833531510104
+          "name": "TEKNOPARK İSTANBUL",
+          "lat": 40.9188180005411,
+          "lng": 29.3121599999943,
+          "trafficFactor": 0.9455298993487271
         },
         {
-          "name": "ATAŞEHİR  BELEDİYESİ",
-          "lat": 40.9978340219462,
-          "lng": 29.1022610480026,
-          "trafficFactor": 2.6484085862324207
+          "name": "KÜME EVLERİ",
+          "lat": 40.9245339687763,
+          "lng": 29.3042370364774,
+          "trafficFactor": 1.9388379204892967
         },
         {
-          "name": "ATAŞEHİR PLAZALAR",
-          "lat": 40.9930850005527,
-          "lng": 29.1231099999919,
-          "trafficFactor": 2.1678832116788325
+          "name": "ŞEYHLİ YOLU",
+          "lat": 40.9007320005381,
+          "lng": 29.285795999994,
+          "trafficFactor": 1.743879472693032
         },
         {
-          "name": "MESKENLER",
-          "lat": 40.9786210005505,
-          "lng": 29.1179819999918,
-          "trafficFactor": 2.404624277456648
+          "name": "ÇAMÇEŞME PARKI",
+          "lat": 40.8794300005348,
+          "lng": 29.2726879999939,
+          "trafficFactor": 2.935602575896964
         },
         {
-          "name": "İÇERENKÖY DÖRTYOL",
-          "lat": 40.9709930005493,
-          "lng": 29.1177739999918,
-          "trafficFactor": 2.176801801801802
+          "name": "MİSAKI MİLLİ CADDESİ",
+          "lat": 40.8752460005341,
+          "lng": 29.2727089999939,
+          "trafficFactor": 2.935602575896964
         },
         {
-          "name": "AKYAZI CADDESİ",
-          "lat": 40.9841380005514,
-          "lng": 29.1432409999922,
-          "trafficFactor": 1.5435897435897439
+          "name": "ÇAMÇEŞME MUHTARLIĞI",
+          "lat": 40.8733180005338,
+          "lng": 29.2724899999939,
+          "trafficFactor": 2.9204355108877724
         },
         {
-          "name": "ÜSKÜDAR CADDESİ",
-          "lat": 40.9824190005511,
-          "lng": 29.1656109999925,
-          "trafficFactor": 1.2891113892365458
+          "name": "TERSANE YOLU",
+          "lat": 40.8643589991198,
+          "lng": 29.2721650000094,
+          "trafficFactor": 2.3440233236151604
         },
         {
-          "name": "10. SOKAK",
-          "lat": 40.9866420005518,
-          "lng": 29.1724539999925,
-          "trafficFactor": 1.2891113892365458
+          "name": "GÜZELYALI",
+          "lat": 40.8608080005318,
+          "lng": 29.2827489999941,
+          "trafficFactor": 1.5529411764705885
         },
         {
-          "name": "FATİH CADDESİ",
-          "lat": 40.9849240005514,
-          "lng": 29.1816959999927,
-          "trafficFactor": 1.5857011915673693
+          "name": "İNSAF SOKAK",
+          "lat": 40.874390973467,
+          "lng": 29.3042919666611,
+          "trafficFactor": 0.8251727245419043
         },
         {
-          "name": "49.SOKAK",
-          "lat": 40.9801489991167,
-          "lng": 29.1862330000099,
+          "name": "KARADENİZ CADDESİ",
+          "lat": 40.9675162107438,
+          "lng": 29.4625804626422,
+          "trafficFactor": 0.0
+        }
+      ]
+    },
+    {
+      "Model": "Ant Colony Opt.",
+      "Accuracy": 94.73684210526315,
+      "Precision": 70.0,
+      "Recall": 70.0,
+      "F1 Skoru": 70.0,
+      "ROC-AUC": 98.46153846153847,
+      "Confidence": 83.97850957981326,
+      "Duration": 192.61892126130505,
+      "Distance": 66.83619999999999,
+      "RouteCoords": [
+        {
+          "name": "ÜÇEVLER",
+          "lat": 40.8965570005375,
+          "lng": 29.2519389999937,
+          "trafficFactor": 1.8648275862068968
+        },
+        {
+          "name": "PENDİK YHT İSTASYONU",
+          "lat": 40.8807679991194,
+          "lng": 29.2306260000099,
+          "trafficFactor": 1.5780068728522334
+        },
+        {
+          "name": "TERSANE YOLU",
+          "lat": 40.8643589991198,
+          "lng": 29.2721650000094,
+          "trafficFactor": 2.3440233236151604
+        },
+        {
+          "name": "GÜZELYALI",
+          "lat": 40.8608080005318,
+          "lng": 29.2827489999941,
+          "trafficFactor": 1.5529411764705885
+        },
+        {
+          "name": "İNSAF SOKAK",
+          "lat": 40.874390973467,
+          "lng": 29.3042919666611,
+          "trafficFactor": 0.6284735439665019
+        },
+        {
+          "name": "ÇAMÇEŞME PARKI",
+          "lat": 40.8794300005348,
+          "lng": 29.2726879999939,
+          "trafficFactor": 2.935602575896964
+        },
+        {
+          "name": "MİSAKI MİLLİ CADDESİ",
+          "lat": 40.8752460005341,
+          "lng": 29.2727089999939,
+          "trafficFactor": 2.935602575896964
+        },
+        {
+          "name": "ÇAMÇEŞME MUHTARLIĞI",
+          "lat": 40.8733180005338,
+          "lng": 29.2724899999939,
+          "trafficFactor": 1.743879472693032
+        },
+        {
+          "name": "ŞEYHLİ YOLU",
+          "lat": 40.9007320005381,
+          "lng": 29.285795999994,
+          "trafficFactor": 1.1045003813882532
+        },
+        {
+          "name": "BARBAROS HAYRETTİNPAŞA CADDESİ",
+          "lat": 40.9044130005387,
+          "lng": 29.2686719999938,
+          "trafficFactor": 1.1045003813882532
+        },
+        {
+          "name": "MESLEK LİSESİ",
+          "lat": 40.901673999119,
+          "lng": 29.2735410000094,
+          "trafficFactor": 1.1045003813882532
+        },
+        {
+          "name": "TOKİ KONUTLARI",
+          "lat": 40.9081600005393,
+          "lng": 29.2784639999939,
+          "trafficFactor": 1.1045003813882532
+        },
+        {
+          "name": "PAPATYA SİTESİ",
+          "lat": 40.9232250005417,
+          "lng": 29.2702329999938,
+          "trafficFactor": 1.1045003813882532
+        },
+        {
+          "name": "UHUD SOKAK",
+          "lat": 40.9229080005417,
+          "lng": 29.2637859999937,
+          "trafficFactor": 1.1045003813882532
+        },
+        {
+          "name": "ORMAN CADDESİ",
+          "lat": 40.9258640005421,
+          "lng": 29.2529989999936,
+          "trafficFactor": 1.1045003813882532
+        },
+        {
+          "name": "CAHİT ZARİFOĞLU CADDESİ",
+          "lat": 40.9304640005429,
+          "lng": 29.2788759999939,
+          "trafficFactor": 1.1517925247902365
+        },
+        {
+          "name": "ÇEŞME",
+          "lat": 40.9588707030268,
+          "lng": 29.3059325422939,
+          "trafficFactor": 1.135826771653543
+        },
+        {
+          "name": "TEKNOPARK İSTANBUL",
+          "lat": 40.9188180005411,
+          "lng": 29.3121599999943,
+          "trafficFactor": 0.9455298993487271
+        },
+        {
+          "name": "KÜME EVLERİ",
+          "lat": 40.9245339687763,
+          "lng": 29.3042370364774,
+          "trafficFactor": 0.9244264507422404
+        },
+        {
+          "name": "KARADENİZ CADDESİ",
+          "lat": 40.9675162107438,
+          "lng": 29.4625804626422,
           "trafficFactor": 0.0
         }
       ]
